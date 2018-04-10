@@ -7,10 +7,10 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
-<% String ownerName = "Owner1"; %>
+<% String visitorName = "Visitor1"; %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>
-    <title>Welcome <% out.print(ownerName); %></title>
+    <title>Welcome <% out.print(visitorName); %></title>
     <style>
         #example tr:hover {
             background-color: #ccc;
@@ -28,8 +28,8 @@
 </head>
 <body>
 
-<h3>Welcome <% out.print(ownerName); %></h3>
-Your properties:
+<h3>Welcome <% out.print(visitorName); %></h3>
+All public, validated properties:
 
 <table border="1" id="example">
     <tr id="head">
@@ -42,12 +42,10 @@ Your properties:
         <th>Public</th>
         <th>Commercial</th>
         <th>ID</th>
-        <th>IsValid</th>
         <th>Visits<input type="submit" value="↓"></th>
         <th>Avg. Rating <input type="submit" value="↓"></th>
     </tr>
     <tr class="line">
-        <td>X</td>
         <td>X</td>
         <td>X</td>
         <td>X</td>
@@ -72,7 +70,6 @@ Your properties:
         <td>X</td>
         <td>X</td>
         <td>X</td>
-        <td>X</td>
     </tr>
 </table>
 <table>
@@ -81,13 +78,11 @@ Your properties:
             <option value="" disabled selected>Search by...</option>
             <option value="Name">Name</option>
         </select></td>
-        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><input type="button" name="OK" class="ok" value="Manage Property"/></td>
     </tr>
     <tr>
         <td><input type="text" name="username" placeholder="Search Term"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button id="test" formaction="">Add Property</button></td>
+        <td><input type="button" name="OK" class="ok" value="View Property"/></td>
     </tr>
     <tr>
         <td><button formaction="">Search Properties</button></td>

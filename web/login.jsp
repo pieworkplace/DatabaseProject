@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <%--<td><input type="submit" value="Login"></td>--%>
-                <td><button formaction="ownerCenter.jsp">Login</button></td>
+                <td><button formaction="unconfirmedProperties.jsp">Login</button></td>
             </tr>
             <tr>
                 <td><button formaction="ownerRegister.jsp">New Owner Registration</button></td>
