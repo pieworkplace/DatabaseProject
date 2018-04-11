@@ -1,4 +1,4 @@
-package database.data;
+package database.classes;
 
 public abstract class User {
     protected String password;
