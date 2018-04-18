@@ -1,7 +1,8 @@
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Arrays" %>
-<%@ page import="database.JDBC.DBConnection" %><%--
+<%@ page import="database.JDBC.DBConnectionUtil" %>
+<%@ page import="database.JDBC.DataProcessor" %>
+<%@ page import="java.io.IOException" %>
+<%@ page import="database.JDBC.SQLPreparator" %>
+<%@ page import="java.sql.*" %><%--
   Created by IntelliJ IDEA.
   User: JunlinLiu
   Date: 2018/4/10
@@ -15,6 +16,44 @@
     <title>Title</title>
 </head>
 <body>
-<% out.print(DBConnection.test()); %>
+<%
+    final StringBuilder result = new StringBuilder();
+    DataProcessor dataProcessor = new DataProcessor() {
+        @Override
+        public void processData(ResultSet resultSet) throws SQLException {
+            if (resultSet != null){
+                while (resultSet.next()) {
+                    String name = resultSet.getString("name");
+                    result.append(name);
+                    result.append(" ");
+                    int ID = resultSet.getInt("ID");
+                    result.append(ID);
+                    result.append(" ");
+                }
+            }
+        }
+    };
+
+    DBConnectionUtil.select("select * from example", dataProcessor);
+    out.print(result.toString());
+%>
+<%
+    DBConnectionUtil.update("delete from example where ID=1");
+%>
+<%
+    result .setLength(0);
+    DBConnectionUtil.preSelect("select * from example limit ?, ?", new SQLPreparator() {
+        @Override
+        public void prepareSQL(PreparedStatement preparedStatement) {
+            try {
+                preparedStatement.setInt(1, 0);
+                preparedStatement.setInt(2, 1);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }, dataProcessor);
+    out.print(result);
+%>
 </body>
 </html>
