@@ -87,7 +87,11 @@ public final class DBConnectionUtil {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        sqlPreparator.prepareSQL(preparedStatement);
+        try {
+            sqlPreparator.prepareSQL(preparedStatement);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         ResultSet resultSet = DBConnectionUtil.getResultSet(preparedStatement);
         try {
             dataProcessor.processData(resultSet);

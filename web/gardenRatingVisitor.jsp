@@ -77,10 +77,10 @@
 
         <tr>
             <td>
-                <button>Un-Log Visit</button>
+                <button formaction="gardenRating.jsp">Un-Log Visit</button>
             </td>
             <td>
-                <button>Back</button>
+                <button formaction="visitorCenter.jsp">Back</button>
             </td>
         </tr>
 

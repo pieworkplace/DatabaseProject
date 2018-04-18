@@ -8,11 +8,6 @@ public class User {
         ADMIN, OWNER, VISITOR
     }
 
-    public User(String username, UserType userType) {
-        this.username = username;
-        this.userType = userType;
-    }
-
     public static UserType stringToUserType(String string){
         String upperCaseString = string.toUpperCase();
         switch (upperCaseString){
@@ -24,5 +19,21 @@ public class User {
                 return UserType.VISITOR;
         }
         return null;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

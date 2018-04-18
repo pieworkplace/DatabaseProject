@@ -41,7 +41,7 @@
     DBConnectionUtil.update("delete from example where ID=1");
 %>
 <%
-    result .setLength(0);
+    result.setLength(0);
     DBConnectionUtil.preSelect("select * from example limit ?, ?", new SQLPreparator() {
         @Override
         public void prepareSQL(PreparedStatement preparedStatement) {
@@ -54,6 +54,10 @@
         }
     }, dataProcessor);
     out.print(result);
+%>
+
+<%
+
 %>
 </body>
 </html>

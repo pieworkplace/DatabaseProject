@@ -94,12 +94,12 @@ All Other Valid Properties:
     <tr>
         <td><input type="text" name="username" placeholder="Search Term"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button id="test" formaction="">View Property Details</button></td>
+        <td><button id="test" formaction="farmDetail.jsp">View Property Details</button></td>
     </tr>
     <tr>
         <td><button formaction="">Search Properties</button></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="">Back</button></td>
+        <td><button formaction="ownerCenter.jsp">Back</button></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     </tr>
 </table>

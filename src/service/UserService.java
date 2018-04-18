@@ -11,8 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserService {
-    public User login(String email, String password) {
-        final User user = null;
+    public static User login(final String email, final String password) {
+        final User user = new User();
+        if (email.length() == 0 || password.length() == 0){
+            return null;
+        }
         DBConnectionUtil.preSelect("select * from User where Email = ? and Hashed_Password = ?", new SQLPreparator() {
             @Override
             public void prepareSQL(PreparedStatement preparedStatement) throws SQLException {
@@ -24,11 +27,16 @@ public class UserService {
             public void processData(ResultSet resultSet) throws SQLException {
                 if (resultSet != null) {
                     while (resultSet.next()) {
-                        User user = new User(resultSet.getString("Username"), User.stringToUserType(resultSet.getString("Usertype")));
+                        user.setUsername(resultSet.getString("Username"));
+                        user.setUserType(User.stringToUserType(resultSet.getString("Usertype")));
                     }
                 }
             }
         });
-        return user;
+        if (user.getUsername() == null){
+            return null;
+        }else{
+            return user;
+        }
     }
 }

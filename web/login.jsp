@@ -6,19 +6,24 @@
 </head>
 <body>
     <h3>ATL Gardens, Farms and Orchards</h3>
-    <form action="" method="post">
+    <form action="/LoginServlet" method="post">
         <table>
             <tr>
                 <td>Email</td>
-                <td><input type="text" name="username"></td>
+                <td><input type="text" name="email"></td>
             </tr>
             <tr>
                 <td>Password</td>
                 <td><input type="password" name="password"></td>
             </tr>
             <tr>
-                <%--<td><input type="submit" value="Login"></td>--%>
-                <td><button formaction="unconfirmedProperties.jsp">Login</button></td>
+                <td><input type="submit" value="Login"></td>
+                <% Object bool = request.getSession().getAttribute("fail");
+                    if (bool != null && (Boolean) bool){ %>
+                    <td style="color: red">Wrong email or password. Please try again.</td>
+                <%}
+                    request.getSession().setAttribute("fail", false);
+                %>
             </tr>
             <tr>
                 <td><button formaction="ownerRegister.jsp">New Owner Registration</button></td>

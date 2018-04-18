@@ -1,4 +1,4 @@
-<%--
+<%@ page import="database.classes.User" %><%--
   Created by IntelliJ IDEA.
   User: JunlinLiu
   Date: 2018/4/10
@@ -7,7 +7,10 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
-<% String ownerName = "Owner1"; %>
+<%
+    User user = (User) request.getSession().getAttribute("user");
+    String ownerName = user.getUsername();
+    %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>
     <title>Welcome <% out.print(ownerName); %></title>
@@ -82,19 +85,19 @@ Your properties:
             <option value="Name">Name</option>
         </select></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><input type="button" name="OK" class="ok" value="Manage Property"/></td>
+        <td><input type="button" name="OK" class="ok" value="Manage Property" formaction="manageProperties.jsp"/></td>
     </tr>
     <tr>
         <td><input type="text" name="username" placeholder="Search Term"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button id="test" formaction="">Add Property</button></td>
+        <td><button id="test" formaction="addProperty.jsp">Add Property</button></td>
     </tr>
     <tr>
         <td><button formaction="">Search Properties</button></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="">View Other Properties</button></td>
+        <td><button formaction="propertyList.jsp">View Other Properties</button></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="">Log Out</button></td>
+        <td><button formaction="login.jsp">Log Out</button></td>
     </tr>
 </table>
 <script>

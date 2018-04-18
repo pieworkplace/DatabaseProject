@@ -88,10 +88,10 @@
 
         <tr>
             <td>
-                <button>Log Visit</button>
+                <button formaction="gardenRatingVisitor.jsp">Log Visit</button>
             </td>
             <td>
-                <button>Back</button>
+                <button formaction="visitorCenter.jsp">Back</button>
             </td>
         </tr>
 
