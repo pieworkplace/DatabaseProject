@@ -42,7 +42,7 @@
         for (FarmItem farmItem : approvedItems) { %>
     <tr class="line">
         <td><% out.print(farmItem.getName()); %></td>
-        <td><% out.print(farmItem.getFarmItemType()); %></td>
+        <td><% out.print(farmItem.getType()); %></td>
     </tr>
     <%}
     %>
