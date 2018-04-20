@@ -1,4 +1,5 @@
-<%--
+<%@ page import="database.classes.FarmItem" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: JunlinLiu
   Date: 2018/4/10
@@ -7,6 +8,9 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
+<%
+    List<FarmItem> approvedItems = (List<FarmItem>) request.getSession().getAttribute("approvedItems");
+%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>
     <title>Approved Animals/Crops</title>
@@ -34,14 +38,14 @@
         <th>Name<input type="submit" value="↓"></th>
         <th>Type<input type="submit" value="↓"></th>
     </tr>
+    <%
+        for (FarmItem farmItem : approvedItems) { %>
     <tr class="line">
-        <td>X</td>
-        <td>X</td>
+        <td><% out.print(farmItem.getName()); %></td>
+        <td><% out.print(farmItem.getFarmItemType()); %></td>
     </tr>
-    <tr class="line">
-        <td>Y</td>
-        <td>X</td>
-    </tr>
+    <%}
+    %>
 </table>
 <table>
     <tr>

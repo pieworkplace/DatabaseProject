@@ -17,7 +17,7 @@
 </head>
 <body>
 <h3>Welcome <% out.print(adminName); %></h3>
-<form action="" method="post" id="adminFunctionality">
+<form id="adminFunctionality">
     <table>
         <tr>
             <td><button formaction="allVisitors.jsp">View Visitors List</button></td>

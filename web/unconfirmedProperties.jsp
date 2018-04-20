@@ -1,4 +1,5 @@
-<%--
+<%@ page import="database.classes.Property" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: JunlinLiu
   Date: 2018/4/10
@@ -7,6 +8,9 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
+<%
+    List<Property> unconfirmedProperties = (List<Property>) request.getSession().getAttribute("unconfirmedProperties");
+%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>
     <title>Unconfirmed Properties</title>
@@ -41,30 +45,22 @@ Unconfirmed Properties:
         <th>ID</th>
         <th>Owner<input type="submit" value="↓"></th>
     </tr>
+    <%
+        for (Property property : unconfirmedProperties) { %>
     <tr class="line">
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
+        <td><% out.print(property.getName()); %></td>
+        <td><% out.print(property.getStreet()); %></td>
+        <td><% out.print(property.getCity()); %></td>
+        <td><% out.print(property.getZip()); %></td>
+        <td><% out.print(property.getSize()); %></td>
+        <td><% out.print(property.getPropertyType()); %></td>
+        <td><% out.print(property.isPublic()); %></td>
+        <td><% out.print(property.isCommercial()); %></td>
+        <td><% out.print(property.getID()); %></td>
+        <td><% out.print(property.getOwner()); %></td>
     </tr>
-    <tr class="line">
-        <td>Y</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-    </tr>
+    <%}
+    %>
 </table>
 <table>
     <tr>

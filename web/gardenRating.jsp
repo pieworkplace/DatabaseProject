@@ -1,32 +1,39 @@
+<%@ page import="database.classes.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="database.classes.Property" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+<%
+    Property property = (Property) request.getSession().getAttribute("Ireallyhatethis");
+    String propertyName = property.getName();
+%>
 <head>
     <title>Owner Registration</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
-<h3>Georgia Tech Garden Details</h3>
+<h3><% out.print(propertyName);%> Details</h3>
 <form action="" method="post" id="gardenDetails">
     <table>
         <tr>
             <td><b>Name: </b></td>
-            <td id="name">Georgia Tech Garden</td>
+            <td id="name"><% property.getName(); %></td>
         </tr>
 
         <tr>
             <td><b>Owner: </b></td>
-            <td id="owner">GeorgiaTechGardens</td>
+            <td id="owner"><% property.getOwner(); %></td>
         </tr>
 
         <tr>
             <td><b>Owner Email: </b></td>
-            <td id="ownerEmail">gtgardens@gatech.edu</td>
+            <td id="ownerEmail"> X </td>
         </tr>
         <tr>
             <td><b>Visits: </b></td>
-            <td id="visits">20</td>
+            <td id="visits"> X </td>
         </tr>
 
         <tr>

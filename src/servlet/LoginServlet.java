@@ -1,6 +1,9 @@
 package servlet;
 
+import database.classes.FarmItem;
+import database.classes.Property;
 import database.classes.User;
+import database.classes.Visit;
 import service.UserService;
 
 import javax.servlet.ServletException;
@@ -9,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -25,6 +29,9 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getParameter("email") == null || req.getParameter("password") == null){
+            return;
+        }
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         User user = UserService.login(email, password);
@@ -33,8 +40,22 @@ public class LoginServlet extends HttpServlet {
             if (user.getUserType() == User.UserType.OWNER){
                 req.getRequestDispatcher("/ownerCenter.jsp").forward(req, resp);
             }else if (user.getUserType() == User.UserType.ADMIN){
+                List<Visit> allVisitors = UserService.getAllVisitors();
+                req.getSession().setAttribute("allVisitors", allVisitors);
+                List<Visit> allOwners = UserService.getAllOwners();
+                req.getSession().setAttribute("allOwners", allOwners);
+                List<Property> confirmedProperties = UserService.getconfirmedProperties();
+                req.getSession().setAttribute("confirmedProperties", confirmedProperties);
+                List<Property> unconfirmedProperties = UserService.getunconfirmedProperties();
+                req.getSession().setAttribute("unconfirmedProperties", unconfirmedProperties);
+                List<FarmItem> approvedItems = UserService.getapprovedItems();
+                req.getSession().setAttribute("approvedItems", approvedItems);
+                List<FarmItem> pendingItems = UserService.getpendingItems();
+                req.getSession().setAttribute("pendingItems", pendingItems);
                 req.getRequestDispatcher("/adminFunctionality.jsp").forward(req, resp);
             }else {
+                List<Property> propertyList = UserService.getPublicProperties();
+                req.getSession().setAttribute("publicProperties", propertyList);
                 req.getRequestDispatcher("/visitorCenter.jsp").forward(req, resp);
             }
         } else {

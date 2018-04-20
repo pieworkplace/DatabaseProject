@@ -1,4 +1,6 @@
-<%@ page import="database.classes.User" %><%--
+<%@ page import="database.classes.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="database.classes.Property" %><%--
   Created by IntelliJ IDEA.
   User: JunlinLiu
   Date: 2018/4/10
@@ -48,32 +50,25 @@ All public, validated properties:
         <th>Visits<input type="submit" value="↓"></th>
         <th>Avg. Rating <input type="submit" value="↓"></th>
     </tr>
-    <tr class="line">
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-    </tr>
-    <tr class="line">
-        <td>Y</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-    </tr>
+    <% List<Property> propertyList = (List<Property>) request.getSession().getAttribute("publicProperties");
+    
+        for (Property property : propertyList){ %>
+            <tr class="line">
+                <td><% out.print(property.getName()); %></td>
+                <td><% out.print(property.getStreet()); %></td>
+                <td><% out.print(property.getCity()); %></td>
+                <td><% out.print(property.getZip()); %></td>
+                <td><% out.print(property.getSize()); %></td>
+                <td><% out.print(property.getPropertyType()); %></td>
+                <td><% out.print(property.isPublic()); %></td>
+                <td><% out.print(property.isCommercial()); %></td>
+                <td><% out.print(property.getID()); %></td>
+                <td>X</td>
+                <td>X</td>
+            </tr>
+        <%}
+    %>
+
 </table>
 <table>
     <tr>
@@ -85,7 +80,12 @@ All public, validated properties:
     <tr>
         <td><input type="text" name="username" placeholder="Search Term"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><input type="button" name="OK" class="ok" value="View Property" formaction="gardenRating.jsp"/></td>
+        <td>
+            <form action="/VisitorManageServlet" method="post">
+                <input type = "hidden" id = "rowIndex" name="rowIndex" value="-1"/>
+                <input type="submit" value="View Property">
+            </form>
+        </td>
     </tr>
     <tr>
         <td><button formaction="">Search Properties</button></td>
@@ -99,14 +99,23 @@ All public, validated properties:
     $(document).ready(function() {
         $('#example .line').click(function(e){
             e.stopPropagation();
+            var row_index = $(this).parent().children().index($(this)) - 1;
             $(this).addClass('selected').siblings().removeClass('selected');
+            document.getElementById("rowIndex").value = row_index;
+            // alert(document.getElementById("rowIndex").value);
+            <%--<% Property selectedProperty  = propertyList.get(%>row_index<%)%>--%>
+            <%--$(this).append('<% request.getSession().setAttribute("visitorPropertySelected", propertyList.get(Integer.parseInt(request.getParameter("rowIndex")))); %>')--%>
         });
+        // $('#example').click(function (e) {
+        //     var row_index = $(this).parent().index('tr');
+        //
+        // })
         $('.ok').on('click', function(e){
             e.stopPropagation();
             if (($('.selected').length) === 0){
                 alert("Please select an element.");
             }else{
-                alert($("#example tr.selected td:first").html());
+                window.location.href = "./gardenRating.jsp";
             }
         });
         $(document).click(function() {

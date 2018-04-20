@@ -56,15 +56,35 @@ public final class DBConnectionUtil {
         return null;
     }
 
-    public static void update(String sql){
+    public static int update(String sql){
         Connection connection = DBConnectionUtil.getConnection();
         Statement statement = DBConnectionUtil.getStatement(connection);
+        int res = 0;
         try {
-            statement.executeUpdate(sql);
+            res = statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         DBConnectionUtil.release(statement, connection);
+        return res;
+    }
+
+    public static int preUpdate(String sql, SQLPreparator sqlPreparator){
+        Connection connection = DBConnectionUtil.getConnection();
+        PreparedStatement statement = null;
+        int res = 0;
+        try {
+            sqlPreparator.prepareSQL(statement);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            res = statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DBConnectionUtil.release(statement, connection);
+        return res;
     }
 
     public static void select(String sql, DataProcessor dataProcessor){
