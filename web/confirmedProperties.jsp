@@ -69,14 +69,8 @@ Confirmed Properties:
         <td><select id="SelectSearch">
             <option value="" disabled selected>Search by...</option>
             <option value="Name">Name</option>
-            <option value="Street">Address</option>
-            <option value="City">City</option>
             <option value="Zip">Zip</option>
-            <option value="Size">Size</option>
             <option value="PropertyType">Type</option>
-            <option value="IsPublic">Public</option>
-            <option value="IsCommercial">Commercial</option>
-            <option value="ID">ID</option>
             <option value="ApprovedBy">Verified By</option>
             <option value="AVG">Avg. Rating</option>
         </select></td>

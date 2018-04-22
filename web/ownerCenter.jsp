@@ -1,6 +1,7 @@
 <%@ page import="database.classes.User" %>
 <%@ page import="database.classes.Property" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="service.UserService" %><%--
   Created by IntelliJ IDEA.
   User: JunlinLiu
   Date: 2018/4/10
@@ -12,6 +13,8 @@
 <%
     User user = (User) request.getSession().getAttribute("user");
     String ownerName = user.getUsername();
+//    List<Property> newpropertyList = UserService.getMyProperties(user.getUsername());
+//    request.getSession().setAttribute("myProperties", newpropertyList);
 %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>
@@ -71,9 +74,13 @@ Your properties:
 </table>
 <table>
     <tr>
-        <td><select>
+        <td><select id="SelectSearch">
             <option value="" disabled selected>Search by...</option>
             <option value="Name">Name</option>
+            <option value="City">City</option>
+            <option value="PropertyType">PropertyType</option>
+            <option value="CNT">Visits</option>
+            <option value="AVG">Avg.Rating</option>
         </select></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><form action="/OwnerManageServlet" method="post">
@@ -82,14 +89,20 @@ Your properties:
         </form></td>
     </tr>
     <tr>
-        <td><input type="text" name="username" placeholder="Search Term"></td>
+        <td><input type="text" name="SearchWriteText" placeholder="Search Term(Use '~')" id="SearchWriteText"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><form action="/addProperty.jsp" method="post">
             <input type="submit" value="Add Property">
         </form></td>
     </tr>
     <tr>
-        <td><button formaction="">Search Properties</button></td>
+        <td>
+            <form action="/OwnerSearchPropertyServlet" method="post">
+                <input type="hidden" id="SearchText" name="SearchText" value=""/>
+                <input type="hidden" id="SearchTypeText" name="SearchTypeText" value=""/>
+                <input type="submit" name="Search Properties" value="Search Properties" onclick="get()">
+            </form>
+        </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><form action="/ViewOtherPropertyServlet" method="post">
             <input type="submit" value="View Other Properties">
@@ -99,6 +112,10 @@ Your properties:
             <input type="submit" value="Log Out">
         </form></td>
     </tr>
+    <%
+        List<Property> newpropertyList = UserService.getMyProperties(user.getUsername());
+        request.getSession().setAttribute("myProperties", newpropertyList);
+    %>
 </table>
 <script>
     $(document).ready(function() {
@@ -119,6 +136,15 @@ Your properties:
             document.getElementById("rowIndex").value = -1;
         });
     });
+
+    function get() {
+        var SearchName = document.getElementById("SearchWriteText").value;
+        var SearchSelect = document.getElementById("SelectSearch");
+        var Searchindex = SearchSelect.selectedIndex;
+        var SearchType = SearchSelect.options[Searchindex].value;
+        document.getElementById("SearchText").value = SearchName;
+        document.getElementById("SearchTypeText").value = SearchType;
+    }
 </script>
 </body>
 </html>

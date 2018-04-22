@@ -21,28 +21,55 @@ public class AdminSearchVisitorServlet extends HttpServlet {
         String SearchItem = request.getParameter("SearchText");
         String SearchType = request.getParameter("SearchTypeText");
         final List<Visit> SearchRes = new ArrayList<>();
-        DBConnectionUtil.update("CREATE VIEW AllVisitors AS SELECT Username, Email, COUNT(*)AS Visits\n" +
-                "      FROM (User NATURAL JOIN Visit)\n" +
-                "      GROUP BY Username");
-        DBConnectionUtil.select(
-                "SELECT * FROM AllVisitors\n" +
-                        "WHERE "+ SearchType +" LIKE '%" + SearchItem + "%'", new DataProcessor() {
-                    @Override
-                    public void processData(ResultSet resultSet) throws SQLException {
-                        if (resultSet != null) {
-                            while (resultSet.next()) {
-                                String Username = resultSet.getString("Username");
-                                String Email = resultSet.getString("Email");
-                                int Logged_visit = resultSet.getInt("Visits");
-                                Visit visit = new Visit(Username, Email, Logged_visit);
-                                SearchRes.add(visit);
+        if (!SearchItem.contains("~")) {
+            DBConnectionUtil.update("CREATE VIEW AllVisitors AS SELECT Username, Email, COUNT(*)AS Visits\n" +
+                    "      FROM (User NATURAL JOIN Visit)\n" +
+                    "      GROUP BY Username");
+            DBConnectionUtil.select(
+                    "SELECT * FROM AllVisitors\n" +
+                            "WHERE " + SearchType + " LIKE '%" + SearchItem + "%'", new DataProcessor() {
+                        @Override
+                        public void processData(ResultSet resultSet) throws SQLException {
+                            if (resultSet != null) {
+                                while (resultSet.next()) {
+                                    String Username = resultSet.getString("Username");
+                                    String Email = resultSet.getString("Email");
+                                    int Logged_visit = resultSet.getInt("Visits");
+                                    Visit visit = new Visit(Username, Email, Logged_visit);
+                                    SearchRes.add(visit);
+                                }
                             }
                         }
-                    }
-                });
-        DBConnectionUtil.update("DROP VIEW cs4400_team_62.AllVisitors RESTRICT;");
-        request.getSession().setAttribute("allVisitors", SearchRes);
-        request.getRequestDispatcher("/allVisitors.jsp").forward(request, response);
+                    });
+            DBConnectionUtil.update("DROP VIEW cs4400_team_62.AllVisitors RESTRICT;");
+            request.getSession().setAttribute("allVisitors", SearchRes);
+            request.getRequestDispatcher("/allVisitors.jsp").forward(request, response);
+        }
+        else {
+            String[] nums = SearchItem.split("~");
+            DBConnectionUtil.update("CREATE VIEW AllVisitors AS SELECT Username, Email, COUNT(*)AS Visits\n" +
+                    "      FROM (User NATURAL JOIN Visit)\n" +
+                    "      GROUP BY Username");
+            DBConnectionUtil.select(
+                    "SELECT * FROM AllVisitors\n" +
+                            "WHERE ("+ SearchType +" >= "+ nums[0] +") AND ("+ SearchType +" <= "+ nums[1] +");", new DataProcessor() {
+                        @Override
+                        public void processData(ResultSet resultSet) throws SQLException {
+                            if (resultSet != null) {
+                                while (resultSet.next()) {
+                                    String Username = resultSet.getString("Username");
+                                    String Email = resultSet.getString("Email");
+                                    int Logged_visit = resultSet.getInt("Visits");
+                                    Visit visit = new Visit(Username, Email, Logged_visit);
+                                    SearchRes.add(visit);
+                                }
+                            }
+                        }
+                    });
+            DBConnectionUtil.update("DROP VIEW cs4400_team_62.AllVisitors RESTRICT;");
+            request.getSession().setAttribute("allVisitors", SearchRes);
+            request.getRequestDispatcher("/allVisitors.jsp").forward(request, response);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

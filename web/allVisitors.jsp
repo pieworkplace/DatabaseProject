@@ -69,7 +69,7 @@
         </td>
     </tr>
     <tr>
-        <td><input type="text" name="SearchWriteText" placeholder="Search Term" id="SearchWriteText"></td>
+        <td><input type="text" name="SearchWriteText" placeholder="Search Term(Use '~')" id="SearchWriteText"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td>
             <form action="/AdminServlet" method="post">

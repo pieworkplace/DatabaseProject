@@ -79,25 +79,33 @@
         <tr>
             <td><input type="button" value="Add to Property" id="crops_button" /></td>
         </tr>
-        <tr>
-            <td>Request Crop/Animal Approval:<input type="text" name="request" placeholder="Enter new crop/animal name"></td><td>
-                <select id = "crop_type">
-                    <% if (property.getPropertyType() == Property.PropertyType.FARM){%>
-                        <option value="ANIMAL">Animal</option>
-                        <option value="FLOWER">Flower</option>
-                        <option value="FRUIT">Fruit</option>
-                        <option value="NUT">Nut</option>
-                        <option value="VEGETABLE">Vegetable</option>
-                    <%}else if (property.getPropertyType() == Property.PropertyType.GARDEN){%>
-                        <option value="FLOWER">Flower</option>
-                        <option value="VEGETABLE">Vegetable</option>
-                    <%} else{%>
-                            <option value="FRUIT">Fruit</option>
-                            <option value="NUT">Nut</option>
-                    <%}%>
-            </select></td>
-        <tr><td><button>Submit Request</button></td>></tr>
-        </tr>
+        <%--<tr>--%>
+            <%--<td>Request Crop/Animal Approval:<input type="text" name="request" placeholder="Enter new crop/animal name" id="request"></td><td>--%>
+                <%--<select id = "crop_type">--%>
+                    <%--<% if (property.getPropertyType() == Property.PropertyType.FARM){%>--%>
+                        <%--<option value="ANIMAL">Animal</option>--%>
+                        <%--<option value="FLOWER">Flower</option>--%>
+                        <%--<option value="FRUIT">Fruit</option>--%>
+                        <%--<option value="NUT">Nut</option>--%>
+                        <%--<option value="VEGETABLE">Vegetable</option>--%>
+                    <%--<%}else if (property.getPropertyType() == Property.PropertyType.GARDEN){%>--%>
+                        <%--<option value="FLOWER">Flower</option>--%>
+                        <%--<option value="VEGETABLE">Vegetable</option>--%>
+                    <%--<%} else{%>--%>
+                            <%--<option value="FRUIT">Fruit</option>--%>
+                            <%--<option value="NUT">Nut</option>--%>
+                    <%--<%}%>--%>
+            <%--</select></td>--%>
+        <%--</tr>--%>
+        <%--<tr>--%>
+            <%--<td>--%>
+                <%--<form  action="/OwnerRequestApprovalServlet" method="post">--%>
+                    <%--<input type="text" id="SearchText" name="SearchText" value=""/>--%>
+                    <%--<input type="text" id="SearchTypeText" name="SearchTypeText" value=""/>--%>
+                    <%--<input type="submit" name="Submit Request" value="Submit Request" onclick="get()">--%>
+                <%--</form>--%>
+            <%--</td>--%>
+        <%--</tr>--%>
         <tr>
             <td><button type="submit"><b>Save Changes</b><br />(confirm property)</button></td>
             <td><button formaction="ownerCenter.jsp" formnovalidate><b>Back</b><br />(Don't Save or Confirm)</button></td>
@@ -106,6 +114,33 @@
             <td><button formaction="/OwnerDeleteServlet" formnovalidate><b><font color="red">Delete Property</font></b></button></td>
         </tr>
     </table>
+</form>
+<form action="/OwnerRequestApprovalServlet" method="post">
+    <tr>
+        <td>Request Crop/Animal Approval:<input type="text" name="request" placeholder="Enter new crop/animal name" id="request"></td><td>
+        <select id = "crop_type">
+            <% if (property.getPropertyType() == Property.PropertyType.FARM){%>
+            <option value="ANIMAL">Animal</option>
+            <option value="FLOWER">Flower</option>
+            <option value="FRUIT">Fruit</option>
+            <option value="NUT">Nut</option>
+            <option value="VEGETABLE">Vegetable</option>
+            <%}else if (property.getPropertyType() == Property.PropertyType.GARDEN){%>
+            <option value="FLOWER">Flower</option>
+            <option value="VEGETABLE">Vegetable</option>
+            <%} else{%>
+            <option value="FRUIT">Fruit</option>
+            <option value="NUT">Nut</option>
+            <%}%>
+        </select></td>
+    </tr>
+    <tr>
+        <td>
+            <input type="hidden" id="SearchText" name="SearchText" value=""/>
+            <input type="hidden" id="SearchTypeText" name="SearchTypeText" value=""/>
+            <input type="submit" name="Submit Request" value="Submit Request" onclick="get()">
+        </td>
+    </tr>
 </form>
 
 <%
@@ -116,7 +151,16 @@
             request.getSession().setAttribute("updatePropertyFail", false);
     }
 %>
+<%
+    if (request.getSession().getAttribute("RequestFail") != null) {
+        if ((boolean)request.getSession().getAttribute("RequestFail")) {
+%><p style="color: red">This Item Has Already been in the Database</p>
+<%
+            request.getSession().setAttribute("RequestFail", false);
+        }
+    }
 
+%>
 </body>
 <script>
     $(function(){
@@ -153,5 +197,14 @@
         });
 
     })
+
+    function get() {
+        var SearchName = document.getElementById("request").value;
+        var SearchSelect = document.getElementById("crop_type");
+        var Searchindex = SearchSelect.selectedIndex;
+        var SearchType = SearchSelect.options[Searchindex].value;
+        document.getElementById("SearchText").value = SearchName;
+        document.getElementById("SearchTypeText").value = SearchType;
+    }
 </script>
 </html>

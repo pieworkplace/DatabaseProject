@@ -109,10 +109,6 @@ All public, validated properties:
             $(this).addClass('selected').siblings().removeClass('selected');
             document.getElementById("rowIndex").value = row_index;
         });
-        // $('#example').click(function (e) {
-        //     var row_index = $(this).parent().index('tr');
-        //
-        // })
         $('#viewProperty').on('click', function(e){
             e.stopPropagation();
             if (($('.selected').length) === 0){

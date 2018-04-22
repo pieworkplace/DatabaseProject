@@ -63,23 +63,18 @@
 </table>
 <table>
     <tr>
-        <td><select>
+        <td><select id="SelectSearch">
             <option value="" disabled selected>Search by...</option>
-            <option value="Address">Address</option>
+            <option value="Name">Name</option>
             <option value="City">City</option>
-            <option value="Zip">Zip</option>
-            <option value="Size">Size</option>
-            <option value="Type">Type</option>
-            <option value="Public">Public</option>
-            <option value="Commercial">Commercial</option>
-            <option value="ID">ID</option>
-            <option value="Visits">Visits</option>
-            <option value="Avg.Rating">Avg.Rating</option>
+            <option value="IsPublic">Public</option>
+            <option value="CNT">Visits</option>
+            <option value="AVG">Avg.Rating</option>
         </select></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
     </tr>
     <tr>
-        <td><input type="text" name="username" placeholder="Search Term"></td>
+        <td><input type="text" name="SearchWriteText" placeholder="Search Term(Use '~')" id="SearchWriteText"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><form action="/ViewOtherPropertyDetailServlet" method="post">
             <input type = "hidden" id = "rowIndex" name="rowIndex" value="-1"/>
@@ -87,7 +82,13 @@
         </form></td>
     </tr>
     <tr>
-        <td><button formaction="">Search Properties</button></td>
+        <td>
+            <form action="/OwnerSearchOtherPropertyServlet" method="post">
+                <input type="hidden" id="SearchText" name="SearchText" value=""/>
+                <input type="hidden" id="SearchTypeText" name="SearchTypeText" value=""/>
+                <input type="submit" name="Search Properties" value="Search Properties" onclick="get()">
+            </form>
+        </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><form action="/ownerCenter.jsp" method="post">
             <input type="submit" value="Back">
@@ -114,6 +115,15 @@
             document.getElementById("rowIndex").value = -1;
         });
     });
+
+    function get() {
+        var SearchName = document.getElementById("SearchWriteText").value;
+        var SearchSelect = document.getElementById("SelectSearch");
+        var Searchindex = SearchSelect.selectedIndex;
+        var SearchType = SearchSelect.options[Searchindex].value;
+        document.getElementById("SearchText").value = SearchName;
+        document.getElementById("SearchTypeText").value = SearchType;
+    }
 </script>
 </body>
 </html>
