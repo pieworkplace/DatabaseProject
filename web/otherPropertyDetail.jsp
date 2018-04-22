@@ -1,6 +1,7 @@
 <%@ page import="java.io.IOException" %>
 <%@ page import="database.classes.Property" %>
-<%@ page import="database.classes.User" %><%--
+<%@ page import="database.classes.User" %>
+<%@ page import="service.UserService" %><%--
   Created by IntelliJ IDEA.
   User: ysy
   Date: 4/12/18
@@ -31,11 +32,11 @@
 
       <tr>
           <td><b>Owner Email: </b></td>
-          <td id="ownerEmail"> X </td>
+          <td id="ownerEmail"> <%out.print(UserService.getOwnerEmail(property.getOwner()));%> </td>
       </tr>
       <tr>
           <td><b>Visits: </b></td>
-          <td id="visits"> X </td>
+          <td id="visits"> <%out.print(property.getNumberOfVisits());%> </td>
       </tr>
 
       <tr>
@@ -58,7 +59,7 @@
       </tr>
       <tr>
           <td><b><font color="red">Avg Rating: </font> </b></td>
-          <td id="avgRating"> X </td>
+          <td id="avgRating"> <%out.print(property.getAvg_rating());%> </td>
       </tr>
       <tr>
           <td><b>Type: </b></td>
@@ -80,10 +81,10 @@
       </tr>
       <tr>
           <td><b>Crops: </b></td>
-          <td id="crops">X</td>
+          <td id="crops"><%out.print(UserService.getCropsInProperty(property.getID()));%></td>
       </tr>
       <%if (property.getPropertyType() == Property.PropertyType.FARM){%>
-            <tr><td><b>Animals: </b></td><td id="animals">X</td></tr>
+            <tr><td><b>Animals: </b></td><td id="animals"><%out.print(UserService.getAnimalsInProperty(property.getID()));%></td></tr>
       <%}%>
       <tr>
           <td><form action="/propertyList.jsp" method="post">

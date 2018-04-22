@@ -66,16 +66,32 @@ Confirmed Properties:
 </table>
 <table>
     <tr>
-        <td><select>
+        <td><select id="SelectSearch">
             <option value="" disabled selected>Search by...</option>
             <option value="Name">Name</option>
+            <option value="Street">Address</option>
+            <option value="City">City</option>
+            <option value="Zip">Zip</option>
+            <option value="Size">Size</option>
+            <option value="PropertyType">Type</option>
+            <option value="IsPublic">Public</option>
+            <option value="IsCommercial">Commercial</option>
+            <option value="ID">ID</option>
+            <option value="ApprovedBy">Verified By</option>
+            <option value="AVG">Avg. Rating</option>
         </select></td>
     </tr>
     <tr>
-        <td><input type="text" name="username" placeholder="Search Term"></td>
+        <td><input type="text" name="SearchWriteText" placeholder="Search Term" id="SearchWriteText"></td>
     </tr>
     <tr>
-        <td><button formaction="">Search Properties</button></td>
+        <td>
+            <form action="/AdminSearchConfirmedServlet" method="post">
+                <input type="hidden" id="SearchText" name="SearchText" value=""/>
+                <input type="hidden" id="SearchTypeText" name="SearchTypeText" value=""/>
+                <input type="submit" name="Search Properties" value="Search Properties" onclick="get()">
+            </form>
+        </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><input type="button" name="OK" class="ok" value="Manage Selected Property" formaction="manageProperty.jsp"/></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -103,6 +119,15 @@ Confirmed Properties:
             $('#example .line').removeClass('selected');
         });
     });
+
+    function get() {
+        var SearchName = document.getElementById("SearchWriteText").value;
+        var SearchSelect = document.getElementById("SelectSearch");
+        var Searchindex = SearchSelect.selectedIndex;
+        var SearchType = SearchSelect.options[Searchindex].value;
+        document.getElementById("SearchText").value = SearchName;
+        document.getElementById("SearchTypeText").value = SearchType;
+    }
 </script>
 </body>
 </html>

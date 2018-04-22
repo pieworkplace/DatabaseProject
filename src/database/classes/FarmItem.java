@@ -56,4 +56,9 @@ public class FarmItem {
     public void setType(ItemType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

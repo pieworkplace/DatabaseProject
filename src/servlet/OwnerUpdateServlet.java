@@ -2,6 +2,7 @@ package servlet;
 
 import database.JDBC.DBConnectionUtil;
 import database.JDBC.DataProcessor;
+import database.classes.FarmItem;
 import database.classes.Property;
 import database.classes.User;
 import service.UserService;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet(name = "OwnerUpdateServlet", urlPatterns = "/OwnerUpdateServlet")
 public class OwnerUpdateServlet extends HttpServlet {
@@ -37,6 +39,21 @@ public class OwnerUpdateServlet extends HttpServlet {
         }
         User user = (User) request.getSession().getAttribute("user");
         request.getSession().setAttribute("myProperties", UserService.getMyProperties(user.getUsername()));
+
+        //set farm items
+        DBConnectionUtil.update("delete from Has where PropertyID="+property.getID());
+        List<FarmItem> animalList = UserService.getAnimalList();
+        List<FarmItem> cropList = UserService.getCropList();
+        for (FarmItem farmItem : animalList){
+            if (request.getParameter(farmItem.getName())!=null){
+                DBConnectionUtil.update("insert into Has values("+property.getID()+",\""+farmItem.getName()+"\")");
+            }
+        }
+        for (FarmItem farmItem : cropList){
+            if (request.getParameter(farmItem.getName())!=null){
+                DBConnectionUtil.update("insert into Has values("+property.getID()+",\""+farmItem.getName()+"\")");
+            }
+        }
         request.getRequestDispatcher("/ownerCenter.jsp").forward(request, response);
     }
 

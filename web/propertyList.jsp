@@ -56,8 +56,8 @@
         <td><% out.print(property.isPublic()?"True":"False"); %></td>
         <td><% out.print(property.isCommercial()?"True":"False"); %></td>
         <td><% out.print(property.getID()); %></td>
-        <td>X</td>
-        <td>X</td>
+        <td><% out.print(property.getNumberOfVisits());%></td>
+        <td><%out.print(property.getAvg_rating());%></td>
     </tr>
     <%}%>
 </table>

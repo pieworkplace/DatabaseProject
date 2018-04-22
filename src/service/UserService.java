@@ -197,7 +197,7 @@ public class UserService {
         final List<Property> result = new ArrayList<>();
         DBConnectionUtil.select("SELECT Name,Street, City, Zip, Size, PropertyType, IsPublic, IsCommercial, ID, ApprovedBy, AVG(Rating) AS AVG\n" +
                 "FROM (Property JOIN Visit ON ID = PropertyID)\n" +
-                "GROUP BY Username;", new DataProcessor() {
+                "GROUP BY Name;", new DataProcessor() {
             @Override
             public void processData(ResultSet resultSet) throws SQLException {
                 if (resultSet != null){
@@ -227,7 +227,7 @@ public class UserService {
         final List<Property> result = new ArrayList<>();
         DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, PropertyType, IsPublic, IsCommercial, ID, Owner\n" +
                 "FROM Property\n" +
-                "WHERE IsPublic = FALSE;", new DataProcessor() {
+                "WHERE ApprovedBy IS NULL", new DataProcessor() {
             @Override
             public void processData(ResultSet resultSet) throws SQLException {
                 if (resultSet != null){
@@ -297,7 +297,10 @@ public class UserService {
 
     public static List<Property> getMyProperties(String username) {
         final List<Property> result = new ArrayList<>();
-        DBConnectionUtil.select("select * from Property where Owner=\"" + username + "\"", new DataProcessor() {
+//        "select * from Property where Owner=\"" + username + "\""
+        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(*) as CNT\n" +
+                "      FROM (Property LEFT OUTER JOIN Visit ON ID = PropertyID) WHERE Owner=\""+username+"\"" +
+                "      GROUP BY Name;", new DataProcessor() {
             @Override
             public void processData(ResultSet resultSet) throws SQLException {
                 if (resultSet != null) {
@@ -313,7 +316,9 @@ public class UserService {
                         Property.PropertyType propertyType = Property.stringToPropertyType(resultSet.getString("PropertyType"));
                         String owner = resultSet.getString("Owner");
                         String approvedBy = resultSet.getString("ApprovedBy");
-                        Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy);
+                        int numberOfVisits = resultSet.getInt("CNT");
+                        double avgRating = resultSet.getDouble("AVG");
+                        Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy, avgRating, numberOfVisits);
                         result.add(property);
                     }
                 }
@@ -325,7 +330,10 @@ public class UserService {
 
     public static List<Property> getOtherProperties(String username) {
         final List<Property> result = new ArrayList<>();
-        DBConnectionUtil.select("select * from Property where not (Owner=\"" + username + "\" or ApprovedBy is NULL)", new DataProcessor() {
+//        "select * from Property where not (Owner=\"" + username + "\" or ApprovedBy is NULL)"
+        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(*) as CNT\n" +
+                "      FROM (Property LEFT OUTER JOIN Visit ON ID = PropertyID) WHERE not (Owner=\""+username+"\" or ApprovedBy is NULL)" +
+                "      GROUP BY Name;", new DataProcessor() {
             @Override
             public void processData(ResultSet resultSet) throws SQLException {
                 if (resultSet != null) {
@@ -341,7 +349,9 @@ public class UserService {
                         Property.PropertyType propertyType = Property.stringToPropertyType(resultSet.getString("PropertyType"));
                         String owner = resultSet.getString("Owner");
                         String approvedBy = resultSet.getString("ApprovedBy");
-                        Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy);
+                        int numberOfVisits = resultSet.getInt("CNT");
+                        double avgRating = resultSet.getDouble("AVG");
+                        Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy, avgRating, numberOfVisits);
                         result.add(property);
                     }
                 }
@@ -482,6 +492,38 @@ public class UserService {
 
     public static void unlogVisit(String username, int id) {
         DBConnectionUtil.update("delete from Visit where Username=\"" + username + "\" and PropertyID=" + id);
+    }
+
+    public static List<FarmItem> getCropsInProperty(int ID) {
+        final List<FarmItem> result = new ArrayList<>();
+        DBConnectionUtil.select("select DISTINCT Name from (FarmItem join Has on ItemName=Name) where PropertyID="+ID+" and (not Type=\"ANIMAL\") and IsApproved=1", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("Name");
+                        result.add(new FarmItem(name));
+                    }
+                }
+            }
+        });
+        return result;
+    }
+
+    public static List<FarmItem> getAnimalsInProperty(int ID) {
+        final List<FarmItem> result = new ArrayList<>();
+        DBConnectionUtil.select("select DISTINCT Name from (FarmItem inner join Has on ItemName=Name) where PropertyID="+ID+" and ( Type=\"ANIMAL\") and IsApproved=1", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("Name");
+                        result.add(new FarmItem(name));
+                    }
+                }
+            }
+        });
+        return result;
     }
 }
 

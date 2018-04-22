@@ -72,6 +72,7 @@
                 <% List<FarmItem> farmItemList = UserService.getItemsInProperty(property.getID());
                     for (FarmItem farmItem : farmItemList){%>
                         <input class="removable" type="button" value="<%out.print(farmItem.getName());%>"/>
+                        <input class="removable" type="hidden" name="<%out.print(farmItem.getName());%>" value="<%out.print(farmItem.getName());%>"/>
                     <%}%>
             </td>
         </tr>
@@ -130,14 +131,27 @@
                 }
             });
             if (flag === 0){
+                $('<input type="hidden" class="removable"/>').attr("name", i).val(i).appendTo('td.td_crops');
                 $('<input type="button" class="removable"/>').val(i).click(function(){
-                    $(this).remove();
+                    // $(this).remove();
+                    var vlu = $(this).val();
+                    $( ".removable" ).each(function() {
+                        if (vlu === $(this).val()){
+                            $(this).remove();
+                        }
+                    });
                 }).appendTo('td.td_crops');
             }
         });
     });
     $('.removable').on('click', function () {
-        $(this).remove();
+        var vlu = $(this).val();
+        $( ".removable" ).each(function() {
+            if (vlu === $(this).val()){
+                $(this).remove();
+            }
+        });
+
     })
 </script>
 </html>
