@@ -181,4 +181,11 @@ public class Property {
 
     public void setAvg_rating(double avg_rating) { this.avg_rating = avg_rating; }
 
+    public int getNumberOfVisits() {
+        return numberOfVisits;
+    }
+
+    public void setNumberOfVisits(int numberOfVisits) {
+        this.numberOfVisits = numberOfVisits;
+    }
 }

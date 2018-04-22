@@ -1,6 +1,7 @@
 <%@ page import="database.classes.User" %>
 <%@ page import="java.util.List" %>
-<%@ page import="database.classes.Property" %><%--
+<%@ page import="database.classes.Property" %>
+<%@ page import="service.UserService" %><%--
   Created by IntelliJ IDEA.
   User: JunlinLiu
   Date: 2018/4/10
@@ -12,6 +13,8 @@
 <%
     User user = (User) request.getSession().getAttribute("user");
     String visitorName = user.getUsername();
+    List<Property> propertyList = UserService.getPublicProperties();
+    request.getSession().setAttribute("publicProperties", propertyList);
 %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>
@@ -50,8 +53,7 @@ All public, validated properties:
         <th>Visits<input type="submit" value="↓"></th>
         <th>Avg. Rating <input type="submit" value="↓"></th>
     </tr>
-    <% List<Property> propertyList = (List<Property>) request.getSession().getAttribute("publicProperties");
-    
+    <%
         for (Property property : propertyList){ %>
             <tr class="line">
                 <td><% out.print(property.getName()); %></td>
@@ -63,8 +65,8 @@ All public, validated properties:
                 <td><% out.print(property.isPublic()); %></td>
                 <td><% out.print(property.isCommercial()); %></td>
                 <td><% out.print(property.getID()); %></td>
-                <td>X</td>
-                <td>X</td>
+                <td><% out.print(property.getNumberOfVisits());%></td>
+                <td><%out.print(property.getAvg_rating());%></td>
             </tr>
         <%}
     %>
@@ -90,9 +92,13 @@ All public, validated properties:
     <tr>
         <td><button formaction="">Search Properties</button></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="visitHistory.jsp">View Visit History</button></td>
+
+        <form action="/VisitHistroyServlet" method="post">
+            <td><input type="submit" value="Visit History"></td>
+        </form>
+
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="login.jsp">Log Out</button></td>
+        <td><form action="/login.jsp" method="post"><input type="submit" value="Log Out"></form></td>
     </tr>
 </table>
 <script>

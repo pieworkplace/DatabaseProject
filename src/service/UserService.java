@@ -464,5 +464,24 @@ public class UserService {
         });
         return rating;
     }
+
+    public static boolean ifLogged(String username, int propertyID) {
+        final boolean[] result = {false};
+        DBConnectionUtil.select("select * from Visit where Username=\"" + username + "\" and PropertyID=" + propertyID, new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null){
+                    while (resultSet.next()){
+                        result[0] = true;
+                    }
+                }
+            }
+        });
+        return result[0];
+    }
+
+    public static void unlogVisit(String username, int id) {
+        DBConnectionUtil.update("delete from Visit where Username=\"" + username + "\" and PropertyID=" + id);
+    }
 }
 
