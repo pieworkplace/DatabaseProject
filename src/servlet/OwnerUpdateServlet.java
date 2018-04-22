@@ -2,6 +2,7 @@ package servlet;
 
 import database.JDBC.DBConnectionUtil;
 import database.JDBC.DataProcessor;
+import database.classes.Property;
 import database.classes.User;
 import service.UserService;
 
@@ -17,34 +18,22 @@ import java.sql.SQLException;
 @WebServlet(name = "OwnerUpdateServlet", urlPatterns = "/OwnerUpdateServlet")
 public class OwnerUpdateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Property property = (Property) request.getSession().getAttribute("ownerpropertyselected");
         String propertyName = request.getParameter("propertyName");
         String street = request.getParameter("streetAddress");
         String city = request.getParameter("city");
-        int isCommercial = request.getParameter("isCommercial").equals("Yes")? 1 : 0;
-        int isPublic = request.getParameter("isPublic").equals("Yes")? 1 : 0;
-        String propertyType = request.getParameter("propertyType");
+        int isCommercial = request.getParameter("isCommercial").equals("True")? 1 : 0;
+        int isPublic = request.getParameter("isPublic").equals("True")? 1 : 0;
         int zip = Integer.parseInt(request.getParameter("zip"));
         double acres = Double.parseDouble(request.getParameter("acres"));
         String username = ((User)request.getSession().getAttribute("user")).getUsername();
-        int line2 = DBConnectionUtil.update("insert into Property values(null,\""+propertyName+"\","+acres+","+isCommercial+","+isPublic+",\""+street+"\",\""+city+"\","+zip+",\""+propertyType+"\",\""+username+"\", null)");
+
+        int line2 = DBConnectionUtil.update("update Property set Name=\""+propertyName+"\",Size="+acres+",IsCommercial="+isCommercial+",isPublic="+isPublic+",Street=\""+street+"\",City=\""+city+"\",Zip="+zip+",ApprovedBy=null where ID="+property.getID());
         if (line2 == 0){
-            request.getSession().setAttribute("addNewPropertyFail", true);
-            System.out.println(request.getSession().getAttribute("addNewPropertyFail"));
-            request.getRequestDispatcher("/addProperty.jsp").forward(request, response);
+            request.getSession().setAttribute("updatePropertyFail", true);
+            System.out.println(request.getSession().getAttribute("updatePropertyFail"));
+            request.getRequestDispatcher("/manageProperties.jsp").forward(request, response);
             return;
-        }
-        final StringBuilder propertyID = new StringBuilder();
-        DBConnectionUtil.select("select * from Property where Name=\"" + propertyName + "\"", new DataProcessor() {
-            @Override
-            public void processData(ResultSet resultSet) throws SQLException {
-                while (resultSet.next()){
-                    propertyID.append(resultSet.getInt("ID"));
-                }
-            }
-        });
-        DBConnectionUtil.update("insert into Has values("+propertyID.toString()+",\""+request.getParameter("cropSelect")+"\")");
-        if( propertyType.equals("FARM")){
-            DBConnectionUtil.update("insert into Has values("+propertyID.toString()+",\""+request.getParameter("animalSelect")+"\")");
         }
         User user = (User) request.getSession().getAttribute("user");
         request.getSession().setAttribute("myProperties", UserService.getMyProperties(user.getUsername()));

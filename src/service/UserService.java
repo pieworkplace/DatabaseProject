@@ -121,9 +121,12 @@ public class UserService {
 
     public static List<Property> getPublicProperties() {
         final List<Property> result = new ArrayList<>();
-        DBConnectionUtil.select("select * from Property where IsPublic = 1", new DataProcessor() {
+        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(*) as CNT\n" +
+                "      FROM (Property LEFT OUTER JOIN Visit ON ID = PropertyID) WHERE IsPublic = 1 AND ApprovedBy IS NOT NULL\n" +
+                "      GROUP BY Name;", new DataProcessor() {
             @Override
             public void processData(ResultSet resultSet) throws SQLException {
+                System.out.println("lalala");
                 if (resultSet != null){
                     while (resultSet.next()){
                         int ID = resultSet.getInt("ID");
@@ -137,7 +140,10 @@ public class UserService {
                         Property.PropertyType propertyType = Property.stringToPropertyType(resultSet.getString("PropertyType"));
                         String owner = resultSet.getString("Owner");
                         String approvedBy = resultSet.getString("ApprovedBy");
-                        Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy);
+                        double avgRating = resultSet.getDouble("AVG");
+                        int numOfVisits = resultSet.getInt("CNT");
+                        System.out.println("wuwuwu");
+                        Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy, avgRating, numOfVisits);
                         result.add(property);
                     }
                 }
@@ -360,7 +366,103 @@ public class UserService {
         return result;
     }
 
+    public static String getOwnerEmail(String owner) {
+        final String[] email = new String[1];
+        DBConnectionUtil.select("select Email from User where Username=\"" + owner + "\"", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                while (resultSet.next()) {
+                    email[0] = resultSet.getString("Email");
+                }
+            }
+        });
+        return email[0];
+
+    }
+
+    public static int getVisits(int id) {
+        final int[] visits = new int[1];
+        DBConnectionUtil.select("select count(PropertyID) as visits from Visit where PropertyID=" + id, new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                while (resultSet.next()) {
+                    visits[0] = resultSet.getInt("visits");
+                }
+            }
+        });
+        return visits[0];
+    }
+
+    public static List<Double> getRating(int id) {
+        final List<Double> ratings = new ArrayList<>();
+        DBConnectionUtil.select("select Rating from Visit where PropertyID=" + id, new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                while (resultSet.next()) {
+                    ratings.add(resultSet.getDouble("Rating"));
+                }
+            }
+        });
+        return ratings;
+    }
+
+    public static List<String> getItems(int id) {
+        final List<String> items = new ArrayList<>();
+        DBConnectionUtil.select("select ItemName from Has where PropertyID=" + id, new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                while (resultSet.next()) {
+                    items.add(resultSet.getString("ItemName"));
+                }
+            }
+        });
+        return items;
+    }
 
 
+    public static void addVisit(String userName, int id, String time, int rating) {
+        DBConnectionUtil.update("insert into Visit values (\"" + userName  + "\", " + id + ", \"" + time + "\"," + rating + ");");
+    }
+
+    public static List<String> getDate(String userName) {
+        final List<String> date = new ArrayList<>();
+        DBConnectionUtil.select("select VisitDate from Visit where Username =\"" + userName + "\"", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                while (resultSet.next()) {
+                    date.add(resultSet.getString("VisitDate"));
+                }
+            }
+        });
+        return date;
+    }
+
+    public static List<String> getPropertyName(String userName) {
+        final List<String> propertyName = new ArrayList<>();
+        DBConnectionUtil.select("SELECT Name\n" +
+                "FROM (Property JOIN Visit ON ID =PropertyID)\n" +
+                "WHERE Username =  \"" + userName + "\"", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                while (resultSet.next()) {
+                    propertyName.add(resultSet.getString("Name"));
+                }
+            }
+        });
+        return propertyName;
+    }
+
+    public static List<Integer> getUserRating(String userName) {
+        final List<Integer> rating = new ArrayList<>();
+        DBConnectionUtil.select("select Rating from Visit where Username =\"" + userName + "\"", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                while (resultSet.next()) {
+                    rating.add(resultSet.getInt("Rating"));
+                }
+            }
+        });
+        return rating;
+    }
 }
 

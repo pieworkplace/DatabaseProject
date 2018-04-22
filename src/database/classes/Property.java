@@ -13,6 +13,7 @@ public class Property {
     private String owner;
     private String approvedBy;
     private double avg_rating;
+    private int numberOfVisits;
 
     public enum PropertyType{
         GARDEN, FARM, ORCHARD;
@@ -27,13 +28,36 @@ public class Property {
     }
 
     public static PropertyType stringToPropertyType(String s){
-        if (s.equals("GARDEN"))
+        if (s.toUpperCase().equals("GARDEN"))
             return PropertyType.GARDEN;
-        if (s.equals("FARM"))
+        if (s.toUpperCase().equals("FARM"))
             return PropertyType.FARM;
-        if (s.equals("ORCHARD"))
+        if (s.toUpperCase().equals("ORCHARD"))
             return PropertyType.ORCHARD;
         return null;
+    }
+
+    public static String propertyTypeToString(Property.PropertyType p){
+        if (p == PropertyType.GARDEN) return "Garden";
+        if (p == PropertyType.FARM) return "Farm";
+        if (p == PropertyType.ORCHARD) return "Orchard";
+        return null;
+    }
+
+    public Property(int ID, String name, double size, boolean isCommercial, boolean isPublic, String city, String street, int zip, PropertyType propertyType, String owner, String approvedBy, double avg_rating, int numberOfVisits) {
+        this.ID = ID;
+        this.name = name;
+        this.size = size;
+        this.isCommercial = isCommercial;
+        this.isPublic = isPublic;
+        this.city = city;
+        this.street = street;
+        this.zip = zip;
+        this.propertyType = propertyType;
+        this.owner = owner;
+        this.approvedBy = approvedBy;
+        this.avg_rating = avg_rating;
+        this.numberOfVisits = numberOfVisits;
     }
 
     public Property(int ID, String name, double size, boolean isCommercial, boolean isPublic, String city, String street, int zip, PropertyType propertyType, String owner, String approvedBy) {

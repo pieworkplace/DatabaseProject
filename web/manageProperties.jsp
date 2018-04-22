@@ -16,39 +16,40 @@
     User user = (User) request.getSession().getAttribute("user");
 %>
 <h3>Manage <%out.print(property.getName());%></h3>
-<form action="" method="post">
+<form action="/OwnerUpdateServlet" method="post">
     <table>
         <tr>
-            <td>Name:<input type="text" value="<%out.print(property.getName());%>" required/></td>
-            <td>Type:<%
+            <td>Name:<input name="propertyName" type="text" value="<%out.print(property.getName());%>" required/></td>
+            <td>Type:
+                <%
             if (property.getPropertyType() == Property.PropertyType.FARM){
             out.print("Farm");
             } else if (property.getPropertyType() == Property.PropertyType.ORCHARD){
             out.print("Orchard");
             } else{
             out.print("Garden");
-            }%></td>
+            }%><p></td>
         </tr>
         <tr>
-            <td>Address:<input type="text" value="<%out.print(property.getStreet());%>" required></td>
-            <td>Public:<select>
+            <td>Address:<input name="streetAddress" type="text" value="<%out.print(property.getStreet());%>" required></td>
+            <td>Public:<select name="isPublic">
                 <option value="True">True</option>
                 <option value="False" <%out.print(property.isPublic()?"":"selected");%>>False</option>
             </select></td>
         </tr>
         <tr>
-            <td>City:<input type="text" value="Atlanta" required></td>
-            <td>Commercial:<select>
+            <td>City:<input name="city" type="text" value="<%out.print(property.getCity());%>" required></td>
+            <td>Commercial:<select name="isCommercial">
                 <option value="True">True</option>
                 <option value="False" <%out.print(property.isCommercial()?"":"selected");%>>False</option>
             </select></td>
         </tr>
         <tr>
-            <td>Zip:<input type="number" value="<%out.print(property.getZip());%>" min="10000" max="99999" required></td>
+            <td>Zip:<input name="zip" type="number" value="<%out.print(property.getZip());%>" min="10000" max="99999" required></td>
             <td>ID:<%out.print(property.getID());%></td>
         </tr>
         <tr>
-            <td>Size(acres):<input type="number" value="<%out.print(property.getSize());%>" step="0.01" min="0" required></td>
+            <td>Size(acres):<input name="acres" type="number" value="<%out.print(property.getSize());%>" step="0.01" min="0" required></td>
         </tr>
         <tr>
             <td>Add new Crop/Animal:<select id="CropType">
@@ -97,7 +98,7 @@
         <tr><td><button>Submit Request</button></td>></tr>
         </tr>
         <tr>
-            <td><button><b>Save Changes</b><br />(confirm property)</button></td>
+            <td><button type="submit"><b>Save Changes</b><br />(confirm property)</button></td>
             <td><button formaction="ownerCenter.jsp" formnovalidate><b>Back</b><br />(Don't Save or Confirm)</button></td>
         </tr>
         <tr>
@@ -105,6 +106,16 @@
         </tr>
     </table>
 </form>
+
+<%
+    Object o = request.getSession().getAttribute("updatePropertyFail");
+    if (o != null && (boolean)o){%>
+        <p style="color: red">Property Name already exists.</p>
+    <%
+            request.getSession().setAttribute("updatePropertyFail", false);
+    }
+%>
+
 </body>
 <script>
     $(function(){
