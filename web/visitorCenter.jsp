@@ -83,7 +83,7 @@ All public, validated properties:
         <td>
             <form action="/VisitorManageServlet" method="post">
                 <input type = "hidden" id = "rowIndex" name="rowIndex" value="-1"/>
-                <input type="submit" value="View Property">
+                <input type="submit" value="View Property" id = "viewProperty">
             </form>
         </td>
     </tr>
@@ -102,24 +102,22 @@ All public, validated properties:
             var row_index = $(this).parent().children().index($(this)) - 1;
             $(this).addClass('selected').siblings().removeClass('selected');
             document.getElementById("rowIndex").value = row_index;
-            // alert(document.getElementById("rowIndex").value);
-            <%--<% Property selectedProperty  = propertyList.get(%>row_index<%)%>--%>
-            <%--$(this).append('<% request.getSession().setAttribute("visitorPropertySelected", propertyList.get(Integer.parseInt(request.getParameter("rowIndex")))); %>')--%>
         });
         // $('#example').click(function (e) {
         //     var row_index = $(this).parent().index('tr');
         //
         // })
-        $('.ok').on('click', function(e){
+        $('#viewProperty').on('click', function(e){
             e.stopPropagation();
             if (($('.selected').length) === 0){
                 alert("Please select an element.");
             }else{
-                window.location.href = "./gardenRating.jsp";
+                window.location.href = "/VisitorManageServlet";
             }
         });
         $(document).click(function() {
             $('#example .line').removeClass('selected');
+            document.getElementById("rowIndex").value = -1;
         });
     });
 </script>

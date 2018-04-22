@@ -3,6 +3,7 @@ package database.classes;
 public class User {
     private String username;
     private UserType userType;
+    private String email;
 
     public enum UserType{
         ADMIN, OWNER, VISITOR
@@ -35,5 +36,13 @@ public class User {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

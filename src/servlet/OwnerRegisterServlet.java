@@ -47,6 +47,11 @@ public class OwnerRegisterServlet extends HttpServlet {
                 request.getRequestDispatcher("/ownerRegister.jsp").forward(request, response);
             }else {
                 int line2 = DBConnectionUtil.update("insert into Property values(null,\""+propertyName+"\","+acres+","+isCommercial+","+isPublic+",\""+street+"\",\""+city+"\","+zip+",\""+propertyType+"\",\""+username+"\", null)");
+                if (line2 == 0){
+                    request.getSession().setAttribute("OwnerRegfail", 2);
+                    request.getRequestDispatcher("/ownerRegister.jsp").forward(request, response);
+                    return;
+                }
                 final StringBuilder propertyID = new StringBuilder();
                 DBConnectionUtil.select("select * from Property where Name=\"" + propertyName + "\"", new DataProcessor() {
                     @Override

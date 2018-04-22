@@ -1,4 +1,6 @@
-<%@ page import="database.classes.User" %><%--
+<%@ page import="database.classes.User" %>
+<%@ page import="database.classes.Property" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: JunlinLiu
   Date: 2018/4/10
@@ -10,7 +12,7 @@
 <%
     User user = (User) request.getSession().getAttribute("user");
     String ownerName = user.getUsername();
-    %>
+%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>
     <title>Welcome <% out.print(ownerName); %></title>
@@ -49,34 +51,23 @@ Your properties:
         <th>Visits<input type="submit" value="↓"></th>
         <th>Avg. Rating <input type="submit" value="↓"></th>
     </tr>
+    <% List<Property> propertyList = (List<Property>) request.getSession().getAttribute("myProperties");
+        for (Property property : propertyList){ %>
     <tr class="line">
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
+        <td><% out.print(property.getName()); %></td>
+        <td><% out.print(property.getStreet()); %></td>
+        <td><% out.print(property.getCity()); %></td>
+        <td><% out.print(property.getZip()); %></td>
+        <td><% out.print(property.getSize()); %></td>
+        <td><% out.print(property.getPropertyType()); %></td>
+        <td><% out.print(property.isPublic()?"True":"False"); %></td>
+        <td><% out.print(property.isCommercial()?"True":"False"); %></td>
+        <td><% out.print(property.getID()); %></td>
+        <td><% out.print(property.getApprovedBy()!=null?"True":"False"); %></td>
         <td>X</td>
         <td>X</td>
     </tr>
-    <tr class="line">
-        <td>Y</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-        <td>X</td>
-    </tr>
+    <%}%>
 </table>
 <table>
     <tr>
@@ -85,37 +76,47 @@ Your properties:
             <option value="Name">Name</option>
         </select></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><input type="button" name="OK" class="ok" value="Manage Property" formaction="manageProperties.jsp"/></td>
+        <td><form action="/OwnerManageServlet" method="post">
+            <input type = "hidden" id = "rowIndex" name="rowIndex" value="-1"/>
+            <input type="submit" value="Manage Property" id = "viewProperty">
+        </form></td>
     </tr>
     <tr>
         <td><input type="text" name="username" placeholder="Search Term"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button id="test" formaction="addProperty.jsp">Add Property</button></td>
+        <td><form action="/addProperty.jsp" method="post">
+            <input type="submit" value="Add Property">
+        </form></td>
     </tr>
     <tr>
         <td><button formaction="">Search Properties</button></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="propertyList.jsp">View Other Properties</button></td>
+        <td><form action="/ViewOtherPropertyServlet" method="post">
+            <input type="submit" value="View Other Properties">
+        </form></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="login.jsp">Log Out</button></td>
+        <td><form action="/login.jsp" method="post">
+            <input type="submit" value="Log Out">
+        </form></td>
     </tr>
 </table>
 <script>
     $(document).ready(function() {
         $('#example .line').click(function(e){
             e.stopPropagation();
+            var row_index = $(this).parent().children().index($(this)) - 1;
             $(this).addClass('selected').siblings().removeClass('selected');
+            document.getElementById("rowIndex").value = row_index;
         });
-        $('.ok').on('click', function(e){
+        $('#viewProperty').on('click', function(e){
             e.stopPropagation();
             if (($('.selected').length) === 0){
                 alert("Please select an element.");
-            }else{
-                alert($("#example tr.selected td:first").html());
             }
         });
         $(document).click(function() {
             $('#example .line').removeClass('selected');
+            document.getElementById("rowIndex").value = -1;
         });
     });
 </script>

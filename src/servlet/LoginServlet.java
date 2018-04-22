@@ -38,20 +38,10 @@ public class LoginServlet extends HttpServlet {
         if (user != null){
             req.getSession().setAttribute("user", user);
             if (user.getUserType() == User.UserType.OWNER){
+                List<Property> propertyList = UserService.getMyProperties(user.getUsername());
+                req.getSession().setAttribute("myProperties", propertyList);
                 req.getRequestDispatcher("/ownerCenter.jsp").forward(req, resp);
             }else if (user.getUserType() == User.UserType.ADMIN){
-                List<Visit> allVisitors = UserService.getAllVisitors();
-                req.getSession().setAttribute("allVisitors", allVisitors);
-                List<Visit> allOwners = UserService.getAllOwners();
-                req.getSession().setAttribute("allOwners", allOwners);
-                List<Property> confirmedProperties = UserService.getconfirmedProperties();
-                req.getSession().setAttribute("confirmedProperties", confirmedProperties);
-                List<Property> unconfirmedProperties = UserService.getunconfirmedProperties();
-                req.getSession().setAttribute("unconfirmedProperties", unconfirmedProperties);
-                List<FarmItem> approvedItems = UserService.getapprovedItems();
-                req.getSession().setAttribute("approvedItems", approvedItems);
-                List<FarmItem> pendingItems = UserService.getpendingItems();
-                req.getSession().setAttribute("pendingItems", pendingItems);
                 req.getRequestDispatcher("/adminFunctionality.jsp").forward(req, resp);
             }else {
                 List<Property> propertyList = UserService.getPublicProperties();

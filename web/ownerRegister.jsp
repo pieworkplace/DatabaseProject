@@ -89,17 +89,19 @@
             </tr>
         </table>
     </form>
-        <% Object bool = request.getSession().getAttribute("OwnerRegfail");
-            if (bool != null){
-                if (((int)bool) == 1){%>
-        <p style="color: red">Email or password has been used. Please try another one.</p>
-        <%} else if (((int)bool) == 3){%>
-        <p style="color: red">Password and confirm password must match.</p>
-        <%} else if (((int)bool) == 4){%>
-        <p style="color: red">Password must have at least 8 characters.</p>
-        <%}}
-            request.getSession().setAttribute("OwnerRegfail", 0);
-        %>
+    <% Object bool = request.getSession().getAttribute("OwnerRegfail");
+        if (bool != null){
+            if (((int)bool) == 1){%>
+    <p style="color: red">Email or password has been used. Please try another one.</p>
+    <%} else if (((int)bool) == 3){%>
+    <p style="color: red">Password and confirm password must match.</p>
+    <%} else if (((int)bool) == 4){%>
+    <p style="color: red">Password must have at least 8 characters.</p>
+    <%} else if (((int)bool) == 2){%>
+    <p style="color: red">Property name has been used.</p>
+    <%}}
+        request.getSession().setAttribute("OwnerRegfail", 0);
+    %>
     <script>
         $("#ownerRegisterSubmitButton").on("click", function(e) {
             // e.preventDefault();

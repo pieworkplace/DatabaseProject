@@ -49,31 +49,59 @@
 </table>
 <table>
     <tr>
-        <td><input type="button" name="OK" class="ok" value="Approve Selection"/></td>
+        <td>
+            <form action="/AdminpendingServlet" method="post">
+                <input type="hidden" id="rowIndexAP" name="rowIndexAP" value="-1"/>
+                <input type="submit" value="Approve Selection" id = "ApproveSelection">
+            </form>
+        </td>
     </tr>
     <tr>
-        <td><input type="button" name="OK" class="ok" value="Delete Selection"/></td>
+        <td>
+            <form action="/AdminPendingDelServlet" method="post">
+                <input type="hidden" id="rowIndexDL" name="rowIndexDL" value="-1"/>
+                <input type="submit" value="Delete Selection" id = "DeleteSelection">
+            </form>
+        </td>
     </tr>
     <tr>
-        <td><button formaction="">Back</button></td>
+        <td>
+            <button formaction="adminFunctionality.jsp" id="Back">Back</button>
+        </td>
     </tr>
 </table>
 <script>
     $(document).ready(function() {
         $('#example .line').click(function(e){
             e.stopPropagation();
+            var row_index = $(this).parent().children().index($(this)) - 1;
             $(this).addClass('selected').siblings().removeClass('selected');
+            document.getElementById("rowIndexAP").value = row_index;
+            document.getElementById("rowIndexDL").value = row_index;
         });
-        $('.ok').on('click', function(e){
+        $('#ApproveSelection').on('click', function(e){
             e.stopPropagation();
             if (($('.selected').length) === 0){
                 alert("Please select an element.");
             }else{
-                alert($("#example tr.selected td:first").html());
+                window.location.href = "/AdminpendingServlet";
             }
         });
+        $('#DeleteSelection').on('click', function(e){
+            e.stopPropagation();
+            if (($('.selected').length) === 0){
+                alert("Please select an element.");
+            }else{
+                window.location.href = "/AdminpendingDelServlet";
+            }
+        });
+        $('#Back').on('click', function () {
+            window.location.href = "/adminFunctionality.jsp";
+        })
         $(document).click(function() {
             $('#example .line').removeClass('selected');
+            document.getElementById("rowIndexAP").value = -1;
+            document.getElementById("rowIndexDL").value = -1;
         });
     });
 </script>

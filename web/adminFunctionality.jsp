@@ -1,4 +1,9 @@
-<%@ page import="database.classes.User" %><%--
+<%@ page import="database.classes.User" %>
+<%@ page import="database.classes.Visit" %>
+<%@ page import="java.util.List" %>
+<%@ page import="service.UserService" %>
+<%@ page import="database.classes.Property" %>
+<%@ page import="database.classes.FarmItem" %><%--
   Created by IntelliJ IDEA.
   User: guowanyang
   Date: 4/10/18
@@ -9,6 +14,18 @@
 <!DOCTYPE html>
 <html>
 <%
+    List<Visit> allVisitors = UserService.getAllVisitors();
+    request.getSession().setAttribute("allVisitors", allVisitors);
+    List<Visit> allOwners = UserService.getAllOwners();
+    request.getSession().setAttribute("allOwners", allOwners);
+    List<Property> confirmedProperties = UserService.getconfirmedProperties();
+    request.getSession().setAttribute("confirmedProperties", confirmedProperties);
+    List<Property> unconfirmedProperties = UserService.getunconfirmedProperties();
+    request.getSession().setAttribute("unconfirmedProperties", unconfirmedProperties);
+    List<FarmItem> approvedItems = UserService.getapprovedItems();
+    request.getSession().setAttribute("approvedItems", approvedItems);
+    List<FarmItem> pendingItems = UserService.getpendingItems();
+    request.getSession().setAttribute("pendingItems", pendingItems);
     User user = (User) request.getSession().getAttribute("user");
     String adminName = user.getUsername();
 %>

@@ -34,6 +34,7 @@ public class UserService {
                     while (resultSet.next()) {
                         user.setUsername(resultSet.getString("Username"));
                         user.setUserType(User.stringToUserType(resultSet.getString("Usertype")));
+                        user.setEmail(resultSet.getString("Email"));
                     }
                 }
             }
@@ -287,5 +288,79 @@ public class UserService {
         });
         return res;
     }
+
+    public static List<Property> getMyProperties(String username) {
+        final List<Property> result = new ArrayList<>();
+        DBConnectionUtil.select("select * from Property where Owner=\"" + username + "\"", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        int ID = resultSet.getInt("ID");
+                        String name = resultSet.getString("Name");
+                        double size = resultSet.getDouble("Size");
+                        boolean isCommercial = resultSet.getBoolean("IsCommercial");
+                        boolean isPublic = resultSet.getBoolean("IsPublic");
+                        String city = resultSet.getString("City");
+                        String street = resultSet.getString("Street");
+                        int zip = resultSet.getInt("Zip");
+                        Property.PropertyType propertyType = Property.stringToPropertyType(resultSet.getString("PropertyType"));
+                        String owner = resultSet.getString("Owner");
+                        String approvedBy = resultSet.getString("ApprovedBy");
+                        Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy);
+                        result.add(property);
+                    }
+                }
+            }
+        });
+        return result;
+    }
+
+
+    public static List<Property> getOtherProperties(String username) {
+        final List<Property> result = new ArrayList<>();
+        DBConnectionUtil.select("select * from Property where not (Owner=\"" + username + "\" or ApprovedBy is NULL)", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        int ID = resultSet.getInt("ID");
+                        String name = resultSet.getString("Name");
+                        double size = resultSet.getDouble("Size");
+                        boolean isCommercial = resultSet.getBoolean("IsCommercial");
+                        boolean isPublic = resultSet.getBoolean("IsPublic");
+                        String city = resultSet.getString("City");
+                        String street = resultSet.getString("Street");
+                        int zip = resultSet.getInt("Zip");
+                        Property.PropertyType propertyType = Property.stringToPropertyType(resultSet.getString("PropertyType"));
+                        String owner = resultSet.getString("Owner");
+                        String approvedBy = resultSet.getString("ApprovedBy");
+                        Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy);
+                        result.add(property);
+                    }
+                }
+            }
+        });
+        return result;
+    }
+
+    public static List<FarmItem> getItemsInProperty(int ID) {
+        final List<FarmItem> result = new ArrayList<>();
+        DBConnectionUtil.select("select * from Has where PropertyID="+ID, new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("ItemName");
+                        result.add(new FarmItem(name));
+                    }
+                }
+            }
+        });
+        return result;
+    }
+
+
+
 }
 

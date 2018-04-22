@@ -10,8 +10,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <%
-    Property property = (Property) request.getSession().getAttribute("ownerpropertyselected");
-    User user = (User) request.getSession().getAttribute("user");
+    Property property = (Property) request.getSession().getAttribute("otherpropertyselected");
+//    User user = (User) request.getSession().getAttribute("user");
 %>
 <head>
     <title>Property Detail</title>
@@ -31,7 +31,7 @@
 
       <tr>
           <td><b>Owner Email: </b></td>
-          <td id="ownerEmail"><% out.print(user.getEmail()); %></td>
+          <td id="ownerEmail"> X </td>
       </tr>
       <tr>
           <td><b>Visits: </b></td>
@@ -62,17 +62,8 @@
       </tr>
       <tr>
           <td><b>Type: </b></td>
-          <td id="type"><%
-              if (property.getPropertyType() == Property.PropertyType.FARM){
-                  out.print("Farm");
-              } else if (property.getPropertyType() == Property.PropertyType.ORCHARD){
-                  out.print("Orchard");
-              } else{
-                  out.print("Garden");
-              }
-              %></td>
+          <td id="type"><%out.print(property.getPropertyType());%></td>
       </tr>
-
       <tr>
           <td><b>Public: </b></td>
           <td id="public"><%out.print(property.isPublic()?"True":"False");%></td>
@@ -95,7 +86,7 @@
             <tr><td><b>Animals: </b></td><td id="animals">X</td></tr>
       <%}%>
       <tr>
-          <td><form action="/ownerCenter.jsp" method="post">
+          <td><form action="/propertyList.jsp" method="post">
               <input type="submit" value="Back">
           </form></td>
       </tr>

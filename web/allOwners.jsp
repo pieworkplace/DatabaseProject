@@ -51,40 +51,68 @@
 </table>
 <table>
     <tr>
-        <td><select>
+        <td><select id="SelectSearch">
             <option value="" disabled selected>Search by...</option>
-            <option value="Name">Name</option>
+            <option value="Username">Name</option>
+            <option value="Email">Email</option>
+            <option value="Num_Of_Properties">Number of Properties</option>
         </select></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><input type="button" name="OK" class="ok" value="Delete Owner Account"/></td>
+        <td>
+            <form action="/AdminOwnerServlet" method="post">
+                <input type="hidden" id="rowIndex" name="rowIndex" value="-1"/>
+                <input type="submit" value="Delete Owner Account" id = "DeleteOwnerAccount">
+            </form>
+        </td>
     </tr>
     <tr>
-        <td><input type="text" name="username" placeholder="Search Term"></td>
+        <td><input type="text" name="SearchWriteText" placeholder="Search Term" id="SearchWriteText"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="">Back</button></td>
+        <td><button formaction="adminFunctionality.jsp" id="Back">Back</button></td>
     </tr>
     <tr>
-        <td><button formaction="">Search Owners</button></td>
+        <td>
+            <form action="/AdminSearchOwnerServlet" method="post">
+                <input type="hidden" id="SearchText" name="SearchText" value=""/>
+                <input type="hidden" id="SearchTypeText" name="SearchTypeText" value=""/>
+                <input type="submit" name="Search Owners" value="Search Owners" onclick="get()">
+            </form>
+        </td>
     </tr>
 </table>
 <script>
     $(document).ready(function() {
         $('#example .line').click(function(e){
             e.stopPropagation();
+            var row_index = $(this).parent().children().index($(this)) - 1;
             $(this).addClass('selected').siblings().removeClass('selected');
+            document.getElementById("rowIndex").value = row_index;
         });
-        $('.ok').on('click', function(e){
+        $('#DeleteOwnerAccount').on('click', function(e){
             e.stopPropagation();
             if (($('.selected').length) === 0){
                 alert("Please select an element.");
             }else{
-                alert($("#example tr.selected td:first").html());
+                window.location.href = "/AdminOwnerServlet.jsp";
             }
         });
+        $('#Back').on('click', function () {
+            window.location.href = "/adminFunctionality.jsp";
+        })
         $(document).click(function() {
             $('#example .line').removeClass('selected');
+            document.getElementById("rowIndex").value = -1;
         });
     });
+    
+    function get() {
+        var SearchName = document.getElementById("SearchWriteText").value;
+        var SearchSelect = document.getElementById("SelectSearch");
+        var Searchindex = SearchSelect.selectedIndex;
+        var SearchType = SearchSelect.options[Searchindex].value;
+        document.getElementById("SearchText").value = SearchName;
+        document.getElementById("SearchTypeText").value = SearchType;
+    }
 </script>
 </body>
 </html>

@@ -15,7 +15,15 @@ public class Property {
     private double avg_rating;
 
     public enum PropertyType{
-        GARDEN, FARM, ORCHARD
+        GARDEN, FARM, ORCHARD;
+
+        @Override
+        public String toString() {
+            if (this == GARDEN) return "Garden";
+            if (this == FARM) return "Farm";
+            if (this == ORCHARD) return  "Orchard";
+            return null;
+        }
     }
 
     public static PropertyType stringToPropertyType(String s){

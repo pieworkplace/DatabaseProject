@@ -79,7 +79,7 @@ Confirmed Properties:
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><input type="button" name="OK" class="ok" value="Manage Selected Property" formaction="manageProperty.jsp"/></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="adminFunctionality.jsp">Back</button></td>
+        <td><button formaction="adminFunctionality.jsp" id="Back">Back</button></td>
     </tr>
 </table>
 <script>
@@ -96,6 +96,9 @@ Confirmed Properties:
                 alert($("#example tr.selected td:first").html());
             }
         });
+        $('#Back').on('click', function () {
+            window.location.href = "/adminFunctionality.jsp";
+        })
         $(document).click(function() {
             $('#example .line').removeClass('selected');
         });

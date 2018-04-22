@@ -11,17 +11,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "VisitorManageServlet", urlPatterns = "/VisitorManageServlet")
-public class VisitorManageServlet extends HttpServlet {
+@WebServlet(name = "OwnerManageServlet", urlPatterns = "/OwnerManageServlet")
+public class OwnerManageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int index = Integer.parseInt(request.getParameter("rowIndex"));
-        List<Property> propertyList = new ArrayList<>();
-        propertyList = (List<Property>) request.getSession().getAttribute("publicProperties");
+        List<Property> propertyList = (List<Property>) request.getSession().getAttribute("myProperties");
         if (index >= propertyList.size() || index < 0){
-            request.getRequestDispatcher("/visitorCenter.jsp").forward(request, response);
+            request.getRequestDispatcher("/ownerCenter.jsp").forward(request, response);
         } else{
-            request.getSession().setAttribute("Ireallyhatethis", propertyList.get(index));
-            request.getRequestDispatcher("/gardenRating.jsp").forward(request, response);
+            request.getSession().setAttribute("ownerpropertyselected", propertyList.get(index));
+            request.getRequestDispatcher("/manageProperties.jsp").forward(request, response);
         }
     }
 

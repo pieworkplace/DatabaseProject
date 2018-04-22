@@ -29,6 +29,10 @@ public class FarmItem {
         this.type = type;
     }
 
+    public FarmItem(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

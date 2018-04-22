@@ -1,113 +1,132 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page import="database.classes.User" %>
+<%@ page import="database.classes.Property" %>
+<%@ page import="database.classes.FarmItem" %>
+<%@ page import="java.util.List" %>
+<%@ page import="service.UserService" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Owner Registration</title>
+    <title>Manage Property</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body>
-<h3>Manage Garden</h3>
-<form action="" method="post" id="ownerRegisterForm">
+<%
+    Property property = (Property) request.getSession().getAttribute("ownerpropertyselected");
+    User user = (User) request.getSession().getAttribute("user");
+%>
+<h3>Manage <%out.print(property.getName());%></h3>
+<form action="" method="post">
     <table>
         <tr>
-            <td>Name:</td>
-            <td><input type="text" name="name"></td>
-            <td>Type:</td>
-            <td>Garden</td> <%--TODO--%>
+            <td>Name:<input type="text" value="<%out.print(property.getName());%>" required/></td>
+            <td>Type:<%
+            if (property.getPropertyType() == Property.PropertyType.FARM){
+            out.print("Farm");
+            } else if (property.getPropertyType() == Property.PropertyType.ORCHARD){
+            out.print("Orchard");
+            } else{
+            out.print("Garden");
+            }%></td>
         </tr>
-
         <tr>
-            <td>Address:</td>
-            <td><input type="text" name="address"></td>
-            <td>Public:</td>
-            <td><select id = "public">
-                <option value=true>True</option>
-                <option value=false>False</option>
+            <td>Address:<input type="text" value="<%out.print(property.getStreet());%>" required></td>
+            <td>Public:<select>
+                <option value="True">True</option>
+                <option value="False" <%out.print(property.isPublic()?"":"selected");%>>False</option>
             </select></td>
         </tr>
-
         <tr>
-            <td>City:</td>
-            <td><input type="text" name="city"></td>
-            <td>Commercial:</td>
-            <td><select id = "commercial">
-                <option value=true>True</option>
-                <option value=false>False</option>
+            <td>City:<input type="text" value="Atlanta" required></td>
+            <td>Commercial:<select>
+                <option value="True">True</option>
+                <option value="False" <%out.print(property.isCommercial()?"":"selected");%>>False</option>
             </select></td>
         </tr>
-
         <tr>
-            <td>Zip:</td>
-            <td><input type = "text" name = "zip"></td>
-            <td>ID:</td>
-            <td>00237</td> <%--TODO--%>
+            <td>Zip:<input type="number" value="<%out.print(property.getZip());%>" min="10000" max="99999" required></td>
+            <td>ID:<%out.print(property.getID());%></td>
         </tr>
-
         <tr>
-            <td>Size:</td>
-            <td><input type = "text" name = "size"></td>
+            <td>Size(acres):<input type="number" value="<%out.print(property.getSize());%>" step="0.01" min="0" required></td>
         </tr>
-
         <tr>
-            <td>Add New Crop:<select id = "newcrop">
-                <option value="select">Select a Crop to Add</option>
-                <option value="rose">Rose</option>
-                <option value="sunflower">Sunflower</option>
-                <option value="cucumber">Cucumer</option>
-                <option value="eggplant">Eggplant</option>
-                <option value="tomato">Tomato</option>
+            <td>Add new Crop/Animal:<select id="CropType">
+                <% List<FarmItem> farmItemList4 = new ArrayList<>();
+                    if (property.getPropertyType() == Property.PropertyType.FARM){
+                        List<FarmItem> farmItemList3 = UserService.getAnimalList();
+                        for (FarmItem farmItem : farmItemList3){%>
+                            <option value="<% out.print(farmItem.getName());%>"><% out.print(farmItem.getName());%></option>
+                        <%}
+                        farmItemList4 = UserService.getCropList();
+                } else if (property.getPropertyType() == Property.PropertyType.ORCHARD){
+                        farmItemList4 = UserService.getOrchardList();
+                } else{
+                        farmItemList4 = UserService.getGardenList();
+                }
+                    for (FarmItem farmItem : farmItemList4){ %>
+                <option value="<% out.print(farmItem.getName());%>"><% out.print(farmItem.getName());%></option><%}%>
             </select></td>
-            <td class="crops">Crops:</td>
-        </tr>
-
-
-        <tr>
-            <td><input type="button" value="Add a New Crop" id="addNewCrop"></td>
-        </tr>
-
-        <tr>
-            <td>Request Corp Approval:</td>
-            <td>
-                <input type="text" name="request" placeholder="Enter new corp name">
+            <td class="td_crops">Crops/Animals:
+                <% List<FarmItem> farmItemList = UserService.getItemsInProperty(property.getID());
+                    for (FarmItem farmItem : farmItemList){%>
+                        <input class="removable" type="button" value="<%out.print(farmItem.getName());%>"/>
+                    <%}%>
             </td>
-            <td><select id = "crop_type">
-                <option value="New Crop Type">New Crop Type</option>
-                <option value="vegetables">Vegetables</option>
-                <option value="flowers">Flowers</option>
+        </tr>
+        <tr>
+            <td><input type="button" value="Add to Property" id="crops_button" /></td>
+        </tr>
+        <tr>
+            <td>Request Crop/Animal Approval:<input type="text" name="request" placeholder="Enter new crop/animal name"></td><td>
+                <select id = "crop_type">
+                    <% if (property.getPropertyType() == Property.PropertyType.FARM){%>
+                        <option value="ANIMAL">Animal</option>
+                        <option value="FLOWER">Flower</option>
+                        <option value="FRUIT">Fruit</option>
+                        <option value="NUT">Nut</option>
+                        <option value="VEGETABLE">Vegetable</option>
+                    <%}else if (property.getPropertyType() == Property.PropertyType.GARDEN){%>
+                        <option value="FLOWER">Flower</option>
+                        <option value="VEGETABLE">Vegetable</option>
+                    <%} else{%>
+                            <option value="FRUIT">Fruit</option>
+                            <option value="NUT">Nut</option>
+                    <%}%>
             </select></td>
-            <td>
-                <button>Submit Request</button>
-            </td>
+        <tr><td><button>Submit Request</button></td>></tr>
         </tr>
-
         <tr>
-            <td>
-                <button formaction=""><b><font color="red">Delete Property</font></b></button>
-            </td>
-            <td>
-                <button>Save Changes</button>
-            </td>
-            <td>
-                <button>Back (Don't Save)</button>
-            </td>
+            <td><button><b>Save Changes</b><br />(confirm property)</button></td>
+            <td><button formaction="ownerCenter.jsp" formnovalidate><b>Back</b><br />(Don't Save or Confirm)</button></td>
         </tr>
-
+        <tr>
+            <td><button formaction="/OwnerDeleteServlet" formnovalidate><b><font color="red">Delete Property</font></b></button></td>
+        </tr>
     </table>
 </form>
-
 </body>
-
 <script>
     $(function(){
-        $("#addNewCrop").click(function(){
-            var i = $('#newcrop').val();
-            $('<input type="button"/>').val(i).click(function(){
-                $(this).remove();
-            }).appendTo("td.crops");
+        $("#crops_button").click(function(){
+            var i = $('#CropType').val();
+            var flag = 0;
+            $( ".removable" ).each(function( index ) {
+                if (i === $(this).val()){
+                    alert("This item already exists in this property.");
+                    flag = 1;
+                    return false;
+                }
+            });
+            if (flag === 0){
+                $('<input type="button" class="removable"/>').val(i).click(function(){
+                    $(this).remove();
+                }).appendTo('td.td_crops');
+            }
         });
     });
-
+    $('.removable').on('click', function () {
+        $(this).remove();
+    })
 </script>
-
 </html>

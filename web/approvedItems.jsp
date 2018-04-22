@@ -49,49 +49,99 @@
 </table>
 <table>
     <tr>
-        <td><select>
+        <td><select id="SearchSelect" name="SearchSelect">
             <option value="" disabled selected>Search by...</option>
             <option value="Name">Name</option>
+            <option value="Type">Type</option>
         </select></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><select>
+        <td><select id="TypeSelect" name="TypeSelectCol">
             <option value="" disabled selected>Type...</option>
-            <option value="Name">Name</option>
+            <option value="ANIMAL">ANIMAL</option>
+            <option value="NUT">NUT</option>
+            <option value="FRUIT">FRUIT</option>
+            <option value="FLOWER">FLOWER</option>
+            <option value="VEGETABLE">VEGETABLE</option>
         </select></td>
     </tr>
     <tr>
-        <td><input type="text" name="username" placeholder="Search Term"></td>
+        <td>
+            <input type="text" name="SearchName" placeholder="Search Term" id="SearchName">
+        </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><input type="text" name="username" placeholder="Enter Name"></td>
+        <td>
+            <form name="MyItem">
+                <input type="text" name="ItemName" placeholder="Enter Name" id="ItemName">
+            </form>
+        </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><input type="button" name="OK" class="ok" value="Delete Selection"/></td>
+        <td>
+            <form action="/AdminApprovedDelServlet" method="post">
+                <input type="hidden" id="rowIndexDL" name="rowIndexDL" value="-1"/>
+                <input type="submit" value="Delete Selection" id = "DeleteSelection">
+            </form>
+        </td>
     </tr>
     <tr>
-        <td><button formaction="">Search</button></td>
+        <td>
+            <form action="/AdminSearchApprovedServlet" method="post">
+                <input type="hidden" id="SearchNameText" name="SearchNameText" value=""/>
+                <input type="hidden" id="SearchTypeText" name="SearchTypeText" value=""/>
+                <input type="submit" name="Search Approved Item" value="Search Approved Item" onclick="get()">
+            </form>
+        </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="">Add to Approved List</button></td>
+        <td>
+            <form action="/AdminAddAprovedServlet" method="post">
+                <input type="hidden" id="ItemNameText" name="ItemNameText" value=""/>
+                <input type="hidden" id="ItemTypeText" name="ItemTypeText" value=""/>
+                <input type="submit" name="Add to Approved List" value="Add to Approved List" onclick="get()">
+            </form>
+        </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><button formaction="">Back</button></td>
+        <td><button formaction="adminFunctionality.jsp" id="Back">Back</button></td>
     </tr>
 </table>
 <script>
     $(document).ready(function() {
         $('#example .line').click(function(e){
             e.stopPropagation();
+            var row_index = $(this).parent().children().index($(this)) - 1;
             $(this).addClass('selected').siblings().removeClass('selected');
+            document.getElementById("rowIndexDL").value = row_index;
         });
-        $('.ok').on('click', function(e){
+        $('#DeleteSelection').on('click', function(e){
             e.stopPropagation();
             if (($('.selected').length) === 0){
                 alert("Please select an element.");
             }else{
-                alert($("#example tr.selected td:first").html());
+                window.location.href = "/AdminApprovedDelServlet";
             }
         });
+        $('#Back').on('click', function () {
+            window.location.href = "/adminFunctionality.jsp";
+        })
         $(document).click(function() {
             $('#example .line').removeClass('selected');
+            document.getElementById("rowIndexDL").value = -1;
         });
     });
+    
+    function get() {
+        var ItemName = document.getElementById("ItemName").value;
+        var Select = document.getElementById("TypeSelect");
+        var index = Select.selectedIndex;
+        var SelectType = Select.options[index].value;
+        document.getElementById("ItemNameText").value = ItemName;
+        document.getElementById("ItemTypeText").value = SelectType;
+
+        var SearchName = document.getElementById("SearchName").value;
+        var SearchSelect = document.getElementById("SearchSelect");
+        var Searchindex = SearchSelect.selectedIndex;
+        var SearchType = SearchSelect.options[Searchindex].value;
+        document.getElementById("SearchNameText").value = SearchName;
+        document.getElementById("SearchTypeText").value = SearchType;
+    }
 </script>
 </body>
 </html>
