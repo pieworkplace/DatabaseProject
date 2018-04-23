@@ -12,11 +12,11 @@
 </head>
 <body>
 <%
-    Property property = (Property) request.getSession().getAttribute("confirmedpropertyselected");
+    Property property = (Property) request.getSession().getAttribute("unconfirmedpropertyselected");
     User user = (User) request.getSession().getAttribute("user");
 %>
 <h3>Manage <%out.print(property.getName());%></h3>
-<form action="/AdminUpdateConfirmedServlet" method="post">
+<form action="/AdminUpdateUnconfirmedServlet" method="post">
     <table>
         <tr>
             <td>Name:<input name="propertyName" type="text" value="<%out.print(property.getName());%>" required/></td>
@@ -81,10 +81,10 @@
         </tr>
         <tr>
             <td><button type="submit"><b>Save Changes</b><br />(confirm property)</button></td>
-            <td><button formaction="confirmedProperties.jsp" formnovalidate><b>Back</b><br />(Don't Save or Confirm)</button></td>
+            <td><button formaction="unconfirmedProperties.jsp" formnovalidate><b>Back</b><br />(Don't Save or Confirm)</button></td>
         </tr>
         <tr>
-            <td><button formaction="/AdminDeleteConfirmedServlet" formnovalidate><b><font color="red">Delete Property</font></b></button></td>
+            <td><button formaction="/AdminDeleteUnconfirmedServlet" formnovalidate><b><font color="red">Delete Property</font></b></button></td>
         </tr>
     </table>
 </form>

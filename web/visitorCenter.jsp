@@ -13,8 +13,8 @@
 <%
     User user = (User) request.getSession().getAttribute("user");
     String visitorName = user.getUsername();
-    List<Property> propertyList = UserService.getPublicProperties();
-    request.getSession().setAttribute("publicProperties", propertyList);
+//    List<Property> propertyList = UserService.getPublicProperties();
+//    request.getSession().setAttribute("publicProperties", propertyList);
 %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>
@@ -53,7 +53,7 @@ All public, validated properties:
         <th>Visits<input type="submit" value="↓"></th>
         <th>Avg. Rating <input type="submit" value="↓"></th>
     </tr>
-    <%
+    <% List<Property> propertyList = (List<Property>) request.getSession().getAttribute("publicProperties");
         for (Property property : propertyList){ %>
             <tr class="line">
                 <td><% out.print(property.getName()); %></td>
@@ -74,13 +74,17 @@ All public, validated properties:
 </table>
 <table>
     <tr>
-        <td><select>
+        <td><select id="SelectSearch">
             <option value="" disabled selected>Search by...</option>
             <option value="Name">Name</option>
+            <option value="City">City</option>
+            <option value="PropertyType">PropertyType</option>
+            <option value="CNT">Visits</option>
+            <option value="AVG">Avg.Rating</option>
         </select></td>
     </tr>
     <tr>
-        <td><input type="text" name="username" placeholder="Search Term"></td>
+        <td><input type="text" name="SearchWriteText" placeholder="Search Term(Use '~')" id="SearchWriteText"></td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td>
             <form action="/VisitorManageServlet" method="post">
@@ -90,7 +94,13 @@ All public, validated properties:
         </td>
     </tr>
     <tr>
-        <td><button formaction="">Search Properties</button></td>
+        <td>
+            <form action="/VisitorSearchServlet" method="post">
+                <input type="hidden" id="SearchText" name="SearchText" value=""/>
+                <input type="hidden" id="SearchTypeText" name="SearchTypeText" value=""/>
+                <input type="submit" name="Search Properties" value="Search Properties" onclick="get()">
+            </form>
+        </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 
         <form action="/VisitHistroyServlet" method="post">
@@ -100,6 +110,10 @@ All public, validated properties:
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><form action="/login.jsp" method="post"><input type="submit" value="Log Out"></form></td>
     </tr>
+    <%
+        List<Property> newpropertyList = UserService.getPublicProperties();
+        request.getSession().setAttribute("publicProperties", newpropertyList);
+    %>
 </table>
 <script>
     $(document).ready(function() {
@@ -122,6 +136,15 @@ All public, validated properties:
             document.getElementById("rowIndex").value = -1;
         });
     });
+
+    function get() {
+        var SearchName = document.getElementById("SearchWriteText").value;
+        var SearchSelect = document.getElementById("SelectSearch");
+        var Searchindex = SearchSelect.selectedIndex;
+        var SearchType = SearchSelect.options[Searchindex].value;
+        document.getElementById("SearchText").value = SearchName;
+        document.getElementById("SearchTypeText").value = SearchType;
+    }
 </script>
 </body>
 </html>

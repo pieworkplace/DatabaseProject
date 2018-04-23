@@ -195,8 +195,9 @@ public class UserService {
 
     public static List<Property> getconfirmedProperties() {
         final List<Property> result = new ArrayList<>();
-        DBConnectionUtil.select("SELECT Name,Street, City, Zip, Size, PropertyType, IsPublic, IsCommercial, ID, ApprovedBy, AVG(Rating) AS AVG\n" +
-                "FROM (Property JOIN Visit ON ID = PropertyID)\n" +
+        DBConnectionUtil.select("SELECT Name,Street, City, Zip, Size, Owner, PropertyType, IsPublic, IsCommercial, ID, ApprovedBy, AVG(Rating) AS AVG\n" +
+                "FROM (Property LEFT OUTER JOIN Visit ON ID = PropertyID)\n" +
+                "WHERE ApprovedBy IS NOT NULL\n" +
                 "GROUP BY Name;", new DataProcessor() {
             @Override
             public void processData(ResultSet resultSet) throws SQLException {
@@ -211,7 +212,7 @@ public class UserService {
                         String street = resultSet.getString("Street");
                         int zip = resultSet.getInt("Zip");
                         Property.PropertyType propertyType = Property.stringToPropertyType(resultSet.getString("PropertyType"));
-                        String owner = "HaHa";
+                        String owner = resultSet.getString("Owner");
                         String approvedBy = resultSet.getString("ApprovedBy");
                         double avg_rating = resultSet.getDouble("AVG");
                         Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy, avg_rating);
@@ -225,7 +226,7 @@ public class UserService {
 
     public static List<Property> getunconfirmedProperties() {
         final List<Property> result = new ArrayList<>();
-        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, PropertyType, IsPublic, IsCommercial, ID, Owner\n" +
+        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, PropertyType, IsPublic, IsCommercial, ID, Owner\n" +
                 "FROM Property\n" +
                 "WHERE ApprovedBy IS NULL", new DataProcessor() {
             @Override
@@ -242,7 +243,7 @@ public class UserService {
                         int zip = resultSet.getInt("Zip");
                         Property.PropertyType propertyType = Property.stringToPropertyType(resultSet.getString("PropertyType"));
                         String owner = resultSet.getString("Owner");
-                        String approvedBy = "XiXi";
+                        String approvedBy = null;
                         double avg_rating = 0;
                         Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy, avg_rating);
                         result.add(property);
