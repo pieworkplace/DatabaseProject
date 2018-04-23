@@ -128,7 +128,6 @@ public class UserService {
                 "      GROUP BY Name;", new DataProcessor() {
             @Override
             public void processData(ResultSet resultSet) throws SQLException {
-                System.out.println("lalala");
                 if (resultSet != null){
                     while (resultSet.next()){
                         int ID = resultSet.getInt("ID");
@@ -144,7 +143,6 @@ public class UserService {
                         String approvedBy = resultSet.getString("ApprovedBy");
                         double avgRating = resultSet.getDouble("AVG");
                         int numOfVisits = resultSet.getInt("CNT");
-                        System.out.println("wuwuwu");
                         Property property = new Property(ID, name, size, isCommercial, isPublic, city, street, zip, propertyType, owner, approvedBy, avgRating, numOfVisits);
                         result.add(property);
                     }
@@ -526,6 +524,145 @@ public class UserService {
             }
         });
         return result;
+    }
+
+    public static String getAddress(String selectedName) {
+        //System.out.println(selectedName);
+        final String[] address = {new String()};
+        DBConnectionUtil.select("select Street from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                //System.out.println("Testpoint1");
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        address[0] = resultSet.getString("Street");
+                        //System.out.println("Testpoint2");
+                    }
+                }
+            }
+        });
+        //System.out.println(address[0] + "test");
+        return address[0];
+    }
+
+    public static String getCity(String selectedName) {
+        final String[] city = {new String()};
+        DBConnectionUtil.select("select City from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        city[0] = resultSet.getString("City");
+                    }
+                }
+            }
+        });
+        return city[0];
+    }
+
+    public static int getZip(String selectedName) {
+        final int[] zip = new int[1];
+        DBConnectionUtil.select("select Zip from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        zip[0] = resultSet.getInt("Zip");
+                    }
+                }
+            }
+        });
+        return zip[0];
+    }
+
+    public static double getSize(String selectedName) {
+        final double[] size = new double[1];
+        DBConnectionUtil.select("select Size from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        size[0] = resultSet.getDouble("Size");
+                    }
+                }
+            }
+        });
+        return size[0];
+    }
+
+    public static Property.PropertyType getType(String selectedName) {
+        final Property.PropertyType[] type = new Property.PropertyType[1];
+        DBConnectionUtil.select("select PropertyType from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        type[0] = Property.stringToPropertyType(resultSet.getString("PropertyType"));
+                    }
+                }
+            }
+        });
+        return type[0];
+    }
+
+    public static boolean getPublic(String selectedName) {
+        final boolean[] type = new boolean[1];
+        DBConnectionUtil.select("select IsPublic from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        type[0] = resultSet.getBoolean("IsPublic");
+                    }
+                }
+            }
+        });
+        return type[0];
+    }
+
+    public static boolean getCommercial(String selectedName) {
+        final boolean[] type = new boolean[1];
+        DBConnectionUtil.select("select IsCommercial from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        type[0] = resultSet.getBoolean("IsCommercial");
+                    }
+                }
+            }
+        });
+        return type[0];
+    }
+
+    public static int getID(String selectedName) {
+        final int[] id = new int[1];
+        DBConnectionUtil.select("select ID from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        id[0] = resultSet.getInt("ID");
+                    }
+                }
+            }
+        });
+        return id[0];
+    }
+
+    public static String getOwner(String selectedName) {
+        final String[] owner = {new String()};
+        DBConnectionUtil.select("select Owner from Property where Name=\"" + selectedName + "\" ", new DataProcessor() {
+            @Override
+            public void processData(ResultSet resultSet) throws SQLException {
+                if (resultSet != null) {
+                    while (resultSet.next()) {
+                        owner[0] = resultSet.getString("Owner");
+                    }
+                }
+            }
+        });
+        return owner[0];
     }
 
 }

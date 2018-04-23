@@ -87,32 +87,55 @@ Confirmed Properties:
             </form>
         </td>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-        <td><input type="button" name="OK" class="ok" value="Manage Selected Property" formaction="manageProperty.jsp"/></td>
+        <td><form action="/AdminManageConfirmedServlet" method="post">
+            <input type = "hidden" id = "rowIndex" name="rowIndex" value="-1"/>
+            <input type="submit" value="Manage Property" id = "viewProperty">
+        </form></td>
+        <%--<td><input type="button" name="OK" class="ok" value="Manage Selected Property" formaction="manageProperty.jsp"/></td>--%>
         <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
         <td><button formaction="adminFunctionality.jsp" id="Back">Back</button></td>
     </tr>
 </table>
 <script>
+    $('#Back').on('click', function () {
+        window.location.href = "/adminFunctionality.jsp";
+    })
     $(document).ready(function() {
         $('#example .line').click(function(e){
             e.stopPropagation();
+            var row_index = $(this).parent().children().index($(this)) - 1;
             $(this).addClass('selected').siblings().removeClass('selected');
+            document.getElementById("rowIndex").value = row_index;
         });
-        $('.ok').on('click', function(e){
+        $('#viewProperty').on('click', function(e){
             e.stopPropagation();
             if (($('.selected').length) === 0){
                 alert("Please select an element.");
-            }else{
-                alert($("#example tr.selected td:first").html());
             }
         });
-        $('#Back').on('click', function () {
-            window.location.href = "/adminFunctionality.jsp";
-        })
         $(document).click(function() {
             $('#example .line').removeClass('selected');
+            document.getElementById("rowIndex").value = -1;
         });
     });
+    // $(document).ready(function() {
+    //     $('#example .line').click(function(e){
+    //         e.stopPropagation();
+    //         $(this).addClass('selected').siblings().removeClass('selected');
+    //     });
+    //     $('.ok').on('click', function(e){
+    //         e.stopPropagation();
+    //         if (($('.selected').length) === 0){
+    //             alert("Please select an element.");
+    //         }else{
+    //             alert($("#example tr.selected td:first").html());
+    //         }
+    //     });
+    //
+    //     $(document).click(function() {
+    //         $('#example .line').removeClass('selected');
+    //     });
+    // });
 
     function get() {
         var SearchName = document.getElementById("SearchWriteText").value;
