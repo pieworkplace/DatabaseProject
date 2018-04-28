@@ -19,6 +19,7 @@ public class OwnerDeleteServlet extends HttpServlet {
         Property property = (Property) request.getSession().getAttribute("ownerpropertyselected");
         DBConnectionUtil.update("delete from Has where PropertyID="+property.getID());
         DBConnectionUtil.update("delete from Property where Name=\""+property.getName()+"\"");
+        DBConnectionUtil.update("delete from Visit where PropertyID="+property.getID());
         User user = (User) request.getSession().getAttribute("user");
         List<Property> propertyList= UserService.getMyProperties(user.getUsername());
         request.getSession().setAttribute("myProperties", propertyList);

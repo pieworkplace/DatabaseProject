@@ -18,6 +18,7 @@ public class AdminDeleteUnconfirmedServlet extends HttpServlet {
         Property property = (Property) request.getSession().getAttribute("unconfirmedpropertyselected");
         DBConnectionUtil.update("delete from Has where PropertyID="+property.getID());
         DBConnectionUtil.update("delete from Property where Name=\""+property.getName()+"\"");
+        DBConnectionUtil.update("delete from Visit where PropertyID="+property.getID());
         List<Property> propertyList= UserService.getconfirmedProperties();
         request.getSession().setAttribute("unconfirmedProperties", propertyList);
         request.getRequestDispatcher("/unconfirmedProperties.jsp").forward(request,response);

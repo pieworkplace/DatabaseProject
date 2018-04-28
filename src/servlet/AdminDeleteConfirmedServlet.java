@@ -19,6 +19,7 @@ public class AdminDeleteConfirmedServlet extends HttpServlet {
         Property property = (Property) request.getSession().getAttribute("confirmedpropertyselected");
         DBConnectionUtil.update("delete from Has where PropertyID="+property.getID());
         DBConnectionUtil.update("delete from Property where Name=\""+property.getName()+"\"");
+        DBConnectionUtil.update("delete from Visit where PropertyID="+property.getID());
         List<Property> propertyList= UserService.getconfirmedProperties();
         request.getSession().setAttribute("confirmedProperties", propertyList);
         request.getRequestDispatcher("/confirmedProperties.jsp").forward(request,response);

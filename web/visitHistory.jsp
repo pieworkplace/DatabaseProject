@@ -50,7 +50,8 @@
         <tr class="line">
             <td><% out.print(propertyName.get(i)); %></td>
             <td><% out.print(date.get(i)); %></td>
-            <td><% out.print(ratings.get(i)); %></td>
+            <td><% out.print(ratings.get(i));
+            %></td>
         </tr>
         <%}
         %>
@@ -64,7 +65,7 @@
         <%--<td><input type="submit" name="OK" class="ok" value="View Property Details"/></td>--%>
         <%--<input type = "text" id = "rowIndex" name="rowIndex" value="-1"/>--%>
         <input type = "hidden" id = "selectedName" name="selectedName" value="-1"/>
-            <input type = "hidden" id = "rowIndex" name="rowIndex" value="-1"/>
+        <input type = "hidden" id = "rowIndex" name="rowIndex" value="-1"/>
         <input type="submit" value="View Property" id = "viewProperty">
     </tr>
     <tr>

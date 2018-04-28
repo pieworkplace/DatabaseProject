@@ -1,6 +1,7 @@
 <%@ page import="database.classes.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="database.classes.Property" %>
+<%@ page import="service.UserService" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -116,7 +117,11 @@
                 <button formaction="visitorCenter.jsp">Back</button>
             </td>
         </tr>
+        <%
+            List<Property> newpropertyList = UserService.getPublicProperties();
 
+            request.getSession().setAttribute("publicProperties", newpropertyList);
+        %>
 
     </table>
 </form>

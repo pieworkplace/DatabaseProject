@@ -123,7 +123,7 @@ public class UserService {
 
     public static List<Property> getPublicProperties() {
         final List<Property> result = new ArrayList<>();
-        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(*) as CNT\n" +
+        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(VisitDate) as CNT\n" +
                 "      FROM (Property LEFT OUTER JOIN Visit ON ID = PropertyID) WHERE IsPublic = 1 AND ApprovedBy IS NOT NULL\n" +
                 "      GROUP BY Name;", new DataProcessor() {
             @Override
@@ -299,7 +299,7 @@ public class UserService {
     public static List<Property> getMyProperties(String username) {
         final List<Property> result = new ArrayList<>();
 //        "select * from Property where Owner=\"" + username + "\""
-        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(*) as CNT\n" +
+        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(VisitDate) as CNT\n" +
                 "      FROM (Property LEFT OUTER JOIN Visit ON ID = PropertyID) WHERE Owner=\""+username+"\"" +
                 "      GROUP BY Name;", new DataProcessor() {
             @Override
@@ -332,7 +332,7 @@ public class UserService {
     public static List<Property> getOtherProperties(String username) {
         final List<Property> result = new ArrayList<>();
 //        "select * from Property where not (Owner=\"" + username + "\" or ApprovedBy is NULL)"
-        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(*) as CNT\n" +
+        DBConnectionUtil.select("SELECT Name, Street, City, Zip, Size, Owner, ApprovedBy, PropertyType, IsPublic, IsCommercial, ID, AVG(Rating) AS AVG, COUNT(VisitDate) as CNT\n" +
                 "      FROM (Property LEFT OUTER JOIN Visit ON ID = PropertyID) WHERE not (Owner=\""+username+"\" or ApprovedBy is NULL)" +
                 "      GROUP BY Name;", new DataProcessor() {
             @Override

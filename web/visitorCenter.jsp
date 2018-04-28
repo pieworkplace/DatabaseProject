@@ -13,8 +13,13 @@
 <%
     User user = (User) request.getSession().getAttribute("user");
     String visitorName = user.getUsername();
-//    List<Property> propertyList = UserService.getPublicProperties();
-//    request.getSession().setAttribute("publicProperties", propertyList);
+    if (request.getSession().getAttribute("searching") == null || !(boolean)request.getSession().getAttribute("searching")){
+        System.out.println("Fuck you");
+        List<Property> propertyList = UserService.getPublicProperties();
+        request.getSession().setAttribute("publicProperties", propertyList);
+        request.getSession().setAttribute("searching", false);
+    }
+
 %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <head>

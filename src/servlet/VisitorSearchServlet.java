@@ -20,6 +20,7 @@ public class VisitorSearchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String SearchItem = request.getParameter("SearchText");
         String SearchType = request.getParameter("SearchTypeText");
+        request.getSession().setAttribute("searching", true);
         final List<Property> SearchVisitorRes = new ArrayList<>();
         if (!SearchItem.contains("~")) {
             System.out.println("Fuck You");
